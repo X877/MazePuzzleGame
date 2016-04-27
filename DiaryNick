@@ -1,0 +1,19 @@
+Things to note:
+Project scope: Meeting schedule and record of decisions, etc.
+Project design: UML class diagram, walkthroughs, mock-up interfaces (on paper), etc.
+Project plan: Work allocation, timeline for project completion, testing and integration plan, etc.
+
+z5016198 diary
+
+20/4/2016
+-Group meeting discussing timelines, what we should do each week, etc. Full text can be found in github.
+-Created MazePuzzleGame repository for the project
+
+26/4/2016
+-Created board class as arraylist of an arraylist
+
+27/4/2016
+-Tidying up UML
+
+
+
