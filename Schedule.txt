@@ -19,14 +19,16 @@ Make it grid like (richie, darren, nicholas)
 Rough UML diagram/all the objects(classes) on lucidchart (everybody)
 
 Week 8
-Learn how to generate a random path (Darren, lachlan)
+Learn how to generate a random path (Daaron)
+Work on eventListener(keyboard input)(Lochlan)
 Learn how to add many paths(fake) and one real path
-Add one player ( Richie, Darren, nicholas, move with ghosting)
+Draw up the maze board(Richard and Nicholas)
+Add one player ( Richie, Darren, Nicholas, move with ghosting)
 
 Week 9
  Learn how to place blocks around the path (everybody)
 Learn how to place blocks in a maze-like manner
-Move player done (Richie, Darren, nicholas)
+Move player done (Richie, Darren, Nicholas)
 
 
 Week 10
