@@ -100,7 +100,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             }
         }
 
-        g2d.drawOval(x, y, 20, 20);
+        //g2d.drawOval(x, y, 20, 20);
     }
 
     @Override
