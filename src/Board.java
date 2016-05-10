@@ -16,15 +16,14 @@ public class Board {
         //adding columns to the board arraylist
         for (int i = 0; i < width; i++) {
             ArrayList<Tiles> column = new ArrayList<Tiles>();
+            Tiles tile = new Tiles();
 
             for (int j = 0; j < height; j++) {
-                Tiles tile = new Tiles();
                 column.add(tile);
-
-                //add extra tile for starting point and end point
-                if (i == 0 || i == width) {
-                    column.add(tile);
-                }
+            }
+            //add extra tile for starting point and end point
+            if (i == 0 || i == width-1) {
+                column.add(tile);
             }
             columns.add(column);
         }
@@ -50,6 +49,12 @@ public class Board {
     public void setWidth(int width) {
         this.width = width;
     }
-        
 
+    public ArrayList<ArrayList<Tiles>> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(ArrayList<ArrayList<Tiles>> columns) {
+        this.columns = columns;
+    }
 }
