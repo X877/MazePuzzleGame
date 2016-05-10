@@ -2,10 +2,10 @@
  * Used to create walls on the maze board and locate player
  */
 public class Tiles {
-	private final static int NORTH = 0;
-	private final static int EAST = 1;
-	private final static int SOUTH = 2;
-	private final static int WEST = 3;
+	public final static int NORTH = 0;
+	public final static int EAST = 1;
+	public final static int SOUTH = 2;
+	public final static int WEST = 3;
 	public final static int NUMWALLS = 4;
 
 	private boolean[] walls;

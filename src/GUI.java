@@ -66,28 +66,28 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
                 //North wall
                 x2 = x1 + TILE_SIZE;
-                if (currTile.isWall(0)) {
+                if (currTile.isWall(Tiles.NORTH)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //East wall
                 x1 += TILE_SIZE;
                 y2 += TILE_SIZE;
-                if (currTile.isWall(1)) {
+                if (currTile.isWall(Tiles.EAST)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //South wall
                 y1 += TILE_SIZE;
                 x2 -= TILE_SIZE;
-                if (currTile.isWall(2)) {
+                if (currTile.isWall(Tiles.SOUTH)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //West wall
                 x1 -= TILE_SIZE;
                 y2 -= TILE_SIZE;
-                if (currTile.isWall(3)) {
+                if (currTile.isWall(Tiles.WEST)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
@@ -126,8 +126,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	if (aPressed){
     		dx -= 5;
     	}
-    	
-    	
     	
         x += dx;
         y += dy;
