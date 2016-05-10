@@ -16,6 +16,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int y;
     private int dx;
     private int dy;
+    private boolean sPressed;
+    private boolean wPressed;
+    private boolean aPressed;
+    private boolean dPressed;
     private Timer actionTimer;
     
     public GUI(Board mazeBoard) {
@@ -52,6 +56,24 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	// Dodgey and temporary
+    	dy = 0;
+    	if (sPressed){
+    		dy += 5;
+    	}
+    	if (wPressed){
+    		dy -= 5;
+    	}
+    	dx = 0;
+    	if (dPressed){
+    		dx += 5;
+    	}
+    	if (aPressed){
+    		dx -= 5;
+    	}
+    	
+    	
+    	
         x += dx;
         y += dy;
         repaint();
@@ -61,40 +83,37 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     public void keyPressed(KeyEvent e) {
         Random rand = new Random();
         if (e.getKeyChar() == 's'){
-            dy = 5;
+            sPressed = true;
         }
         if (e.getKeyChar() == 'w'){
-            dy = -5;
+        	wPressed = true;
         }
         if (e.getKeyChar() == 'a'){
-            dx = -5;
+        	aPressed = true;
         }
         if (e.getKeyChar() == 'd'){
-            dx = 5;
+        	dPressed = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyChar() == 's'){
-            dy = 0;
+        	sPressed = false;
         }
         if (e.getKeyChar() == 'w'){
-            dy = 0;
+        	wPressed = false;
         }
         if (e.getKeyChar() == 'a'){
-            dx = 0;
+        	aPressed = false;
         }
         if (e.getKeyChar() == 'd'){
-            dx = 0;
+        	dPressed = false;
         }
     }
 
     @Override
     public void keyTyped(KeyEvent arg0) {
         // TODO Auto-generated method stub
-        
     }
-
-
 }
