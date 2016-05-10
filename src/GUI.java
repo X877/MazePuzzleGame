@@ -61,31 +61,29 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 Tiles currTile = mazeBoard.getTile(i, j);
 
                 //North wall
+                x2 = x1 + TILE_SIZE;
                 if (currTile.isWall(0)) {
-                    x2 = x1 + TILE_SIZE;
-
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //East wall
+                x1 += TILE_SIZE;
+                y2 += TILE_SIZE;
                 if (currTile.isWall(1)) {
-                    x1 += TILE_SIZE;
-                    y2 += TILE_SIZE;
-
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //South wall
+                y1 += TILE_SIZE;
+                x2 -= TILE_SIZE;
                 if (currTile.isWall(2)) {
-                    y1 += TILE_SIZE;
-                    x2 -= TILE_SIZE;
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //West wall
+                x1 -= TILE_SIZE;
+                y2 -= TILE_SIZE;
                 if (currTile.isWall(3)) {
-                    x1 -= TILE_SIZE;
-                    y2 -= TILE_SIZE;
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
