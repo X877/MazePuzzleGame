@@ -29,8 +29,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.mazeBoard = mazeBoard;
         this.addKeyListener(this);
         this.setFocusable(true);
-        this.actionTimer = new Timer(40, this);
-        this.actionTimer.start();
+        //this.actionTimer = new Timer(40, this);
+        //this.actionTimer.start();
     }
 
     /**
@@ -127,7 +127,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	if (aPressed){
     		dx -= 5;
     	}
-    	
+
         x += dx;
         y += dy;
         repaint();
