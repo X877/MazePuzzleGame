@@ -6,7 +6,7 @@ public class Tiles {
 	private final static int EAST = 1;
 	private final static int SOUTH = 2;
 	private final static int WEST = 3;
-	private final static int NUMWALLS = 4;
+	public final static int NUMWALLS = 4;
 
 	private boolean[] walls;
     private boolean hasPlayer;
