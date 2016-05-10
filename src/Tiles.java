@@ -19,13 +19,14 @@ public class Tiles {
      * tiles by default
      */
     public Tiles() {
+        walls = new boolean[NUMWALLS];
+
 		for(int curWall = 0; curWall < NUMWALLS; curWall++){
 			this.walls[curWall] = true;
 		}
         this.hasPlayer = false;
         this.startPoint = false;
         this.endPoint = false;
-        walls = new boolean[NUMWALLS];
     }
 
 	public boolean isWall(int wallDirection){

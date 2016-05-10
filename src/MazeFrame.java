@@ -9,12 +9,13 @@ public class MazeFrame extends JFrame{
     }
 
     private void initUI() {
+        Board testBoard = new Board(20, 20);
 
-        final GUI testGUI = new GUI();
+        GUI testGUI = new GUI(testBoard);
         add(testGUI);
 
         setTitle("MAZE");
-        setSize(500, 500);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
