@@ -28,7 +28,7 @@ public class PathGenerator {
 		int numDir = 0;
 		
 		while(numDir < 4){
-			dir = rand.nextInt(4);
+			int dir = rand.nextInt(4);
 			if(!dirSeen[dir]){
 				dirSeen[dir] = true;
 				numDir++;

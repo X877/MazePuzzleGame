@@ -33,6 +33,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.actionTimer.start();
     }
 
+    /**
+     *
+     * @param g
+     */
     private void doDrawing(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
@@ -46,24 +50,22 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int y1 = 0;
         int y2 = 0;
 
-        //x1, y1, x2, y2 coordinate
         for (int i = 0; i < mazeBoard.getColumns().size(); i++) {
             //Reserved space for start tile
-            //if (i == 0) {
-            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
-            //    y2 = y1;
-            //} else {
+            if (i == 0) {
+                y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
+                y2 = y1;
+            } else {
                 y1 = 550 - 2 * TILE_SIZE;
                 y2 = y1;
-            //}
+            }
 
             x1 = 225 + i * TILE_SIZE;
 
             for (int j = 0; j < mazeBoard.getColumns().get(i).size(); j++) {
                 currTile = mazeBoard.getTile(i, j);
-                System.out.println("coordinate x: " + i + " coodinate y: " + j);
-                System.out.println("North wall is: " + currTile.isWall(0));
 
+                //(x1, y1, x2, y2) coordinate format
                 //North wall
                 x2 = x1 + TILE_SIZE;
                 if (currTile.isWall(Tiles.NORTH)) {
@@ -96,7 +98,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 y2 = y1;
 
             }
-
         }
 
         g2d.drawOval(x, y, 20, 20);
