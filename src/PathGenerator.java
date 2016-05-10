@@ -2,11 +2,11 @@ import java.util.Random;
 
 public class PathGenerator {
 	
-	boolean[][] seen;
-	int width;
-	int height;
-	Board board;
-	Random rand;
+	private boolean[][] seen;
+	private int width;
+	private int height;
+	private Board board;
+	private Random rand;
 
 	public PathGenerator(Board startBoard){
 		board = startBoard;
@@ -53,4 +53,43 @@ public class PathGenerator {
 		dfs(startX, startY);
 	}
 
+	public boolean[][] getSeen() {
+		return seen;
+	}
+
+	public void setSeen(boolean[][] seen) {
+		this.seen = seen;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
+	public Random getRand() {
+		return rand;
+	}
+
+	public void setRand(Random rand) {
+		this.rand = rand;
+	}
 }
