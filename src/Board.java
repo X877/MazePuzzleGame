@@ -22,10 +22,14 @@ public class Board {
                 column.add(tile);
             }
             //add extra tile for starting point and end point
-            if (i == 0 || i == width-1) {
-                Tiles specialTile = new Tiles();
-                column.add(specialTile);
-            }
+            //if (i == 0 || i == width-1) {
+            //    Tiles specialTile = new Tiles();
+            //    specialTile.setWall(0, false);
+            //    specialTile.setWall(1, false);
+            //    specialTile.setWall(2, false);
+            //    specialTile.setWall(3, false);
+            //    column.add(specialTile);
+            //}
             columns.add(column);
         }
 

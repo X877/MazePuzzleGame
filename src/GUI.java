@@ -52,13 +52,13 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         for (int i = 0; i < mazeBoard.getColumns().size(); i++) {
             //Reserved space for start tile
-            if (i == 0) {
-                y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
-                y2 = y1;
-            } else {
+            //if (i == 0) {
+            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
+            //    y2 = y1;
+            //} else {
                 y1 = 550 - 2 * TILE_SIZE;
                 y2 = y1;
-            }
+            //}
 
             x1 = 225 + i * TILE_SIZE;
 
