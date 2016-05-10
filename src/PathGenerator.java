@@ -7,6 +7,13 @@ public class PathGenerator {
 	int height;
 	Board board;
 
+	public PathGenerator(Board startBoard){
+		board = startBoard;
+		width = board.getWidth();
+		height = board.getHeight();
+		seen = new boolean[width][height];
+	}
+
 	private boolean isInBound(int curX, int curY){
 		return (curX >= 0 && curY >= 0 && curX < width && curY < height);
 	}
@@ -28,13 +35,6 @@ public class PathGenerator {
 				}
 			}
 		}
-	}
-	
-	public PathGenerator(Board startBoard){
-		board = startBoard;
-		width = board.getWidth();
-		height = board.getHeight();
-		seen = new boolean[width][height];
 	}
 	
 	public void genMaze(){		

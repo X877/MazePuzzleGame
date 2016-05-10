@@ -39,6 +39,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         g2d.setPaint(Color.blue);
 
+        Tiles currTile;
+
         int x1 = 0;
         int x2 = 0;
         int y1 = 0;
@@ -47,18 +49,20 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         //x1, y1, x2, y2 coordinate
         for (int i = 0; i < mazeBoard.getColumns().size(); i++) {
             //Reserved space for start tile
-            if (i == 0) {
-                y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
-                y2 = y1;
-            } else {
+            //if (i == 0) {
+            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
+            //    y2 = y1;
+            //} else {
                 y1 = 550 - 2 * TILE_SIZE;
                 y2 = y1;
-            }
+            //}
 
-            x1 = 225 + i* TILE_SIZE;
+            x1 = 225 + i * TILE_SIZE;
 
             for (int j = 0; j < mazeBoard.getColumns().get(i).size(); j++) {
-                Tiles currTile = mazeBoard.getTile(i, j);
+                currTile = mazeBoard.getTile(i, j);
+                System.out.println("coordinate x: " + i + " coodinate y: " + j);
+                System.out.println("North wall is: " + currTile.isWall(0));
 
                 //North wall
                 x2 = x1 + TILE_SIZE;

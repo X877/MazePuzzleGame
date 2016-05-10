@@ -9,7 +9,22 @@ public class MazeFrame extends JFrame{
     }
 
     private void initUI() {
-        Board testBoard = new Board(20, 20);
+        Board testBoard = new Board(10, 1);
+
+        Tiles test = testBoard.getTile(0, 0);
+        test.setWall(0, false);
+
+        testBoard.removeDoubleWalls();
+
+
+
+        //test.setWall(1, false);
+        //test.setWall(2, false);
+        //test.setWall(3, false);
+
+
+        //PathGenerator newBoard = new PathGenerator(testBoard);
+        //newBoard.genMaze();
 
         GUI testGUI = new GUI(testBoard);
         add(testGUI);
