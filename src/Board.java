@@ -20,6 +20,11 @@ public class Board {
             for (int j = 0; j < height; j++) {
                 Tiles tile = new Tiles();
                 column.add(tile);
+
+                //add extra tile for starting point and end point
+                if (i == 0 || i == width) {
+                    column.add(tile);
+                }
             }
             columns.add(column);
         }

@@ -8,6 +8,7 @@ public class Tiles {
     private boolean wallW;
     private boolean hasPlayer;
     private boolean startPoint;
+    private boolean endPoint;
 
     /**
      * Constructor for Tiles class
@@ -21,6 +22,7 @@ public class Tiles {
         this.wallW = true;
         this.hasPlayer = false;
         this.startPoint = false;
+        this.endPoint = false;
     }
 
     public boolean isWallN() {
@@ -69,5 +71,13 @@ public class Tiles {
 
     public void setStartPoint(boolean startPoint) {
         this.startPoint = startPoint;
+    }
+
+    public boolean isEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(boolean endPoint) {
+        this.endPoint = endPoint;
     }
 }
