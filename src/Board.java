@@ -30,6 +30,10 @@ public class Board {
         }
 
     }
+
+	public Tiles getTile(int x, int y){
+		return columns.get(x).get(y);
+	}
     
     public int getHeight() {
         return height;
