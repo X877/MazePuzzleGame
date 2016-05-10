@@ -16,9 +16,9 @@ public class Board {
         //adding columns to the board arraylist
         for (int i = 0; i < width; i++) {
             ArrayList<Tiles> column = new ArrayList<Tiles>();
-            Tiles tile = new Tiles();
 
             for (int j = 0; j < height; j++) {
+                Tiles tile = new Tiles();
                 column.add(tile);
             }
             //add extra tile for starting point and end point
