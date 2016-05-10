@@ -12,13 +12,16 @@ import java.util.Random;
  */
 
 public class GUI extends JPanel implements KeyListener, ActionListener{
-    private static int TILE_SIZE = 20;
-
+	private static int TILE_SIZE = 20;
+	private static int SOME_NUMBER = 550;
+	private static int SOME_NUMBER2 = 225;
+	private static int SQUARE_SIZE = 10;
+	
     private Board mazeBoard;
     private int x;
     private int y;
-    private int dx;
-    private int dy;
+    
+
     private boolean sPressed;
     private boolean wPressed;
     private boolean aPressed;
@@ -29,8 +32,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.mazeBoard = mazeBoard;
         this.addKeyListener(this);
         this.setFocusable(true);
-        //this.actionTimer = new Timer(40, this);
-        //this.actionTimer.start();
+        this.actionTimer = new Timer(40, this);
+        this.actionTimer.start();
+        this.x = SOME_NUMBER2 + 5 + TILE_SIZE;
+        this.y = SOME_NUMBER - (mazeBoard.getHeight())*TILE_SIZE + 5;
     }
 
     /**
@@ -100,7 +105,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             }
         }
 
-        //g2d.drawOval(x, y, 20, 20);
+        g2d.drawRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
     }
 
     @Override
@@ -113,23 +118,81 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
     	// Dodgey and temporary
-    	dy = 0;
+    	int dy = 0;
     	if (sPressed){
-    		dy += 5;
+    		dy += 4;
     	}
     	if (wPressed){
-    		dy -= 5;
+    		dy -= 4;
     	}
-    	dx = 0;
+    	int dx = 0;
     	if (dPressed){
-    		dx += 5;
+    		dx += 4;
     	}
     	if (aPressed){
-    		dx -= 5;
+    		dx -= 4;
     	}
-
-        x += dx;
-        y += dy;
+    	
+    	// Dodgey stuff
+    	int leftX = (x-SOME_NUMBER2)/TILE_SIZE;
+    	int leftXNew = (x-SOME_NUMBER2 + dx)/TILE_SIZE;
+    	int rightX = (x-SOME_NUMBER2 + SQUARE_SIZE)/TILE_SIZE;
+    	int rightXNew = (x-SOME_NUMBER2 + SQUARE_SIZE+dx)/TILE_SIZE;
+    	int topY = (SOME_NUMBER-y)/TILE_SIZE-1;
+    	int topYNew = (SOME_NUMBER-y-dy)/TILE_SIZE-1;
+    	int bottomY = (SOME_NUMBER-y-SQUARE_SIZE)/TILE_SIZE-1;
+    	int bottomYNew = (SOME_NUMBER-y-SQUARE_SIZE-dy)/TILE_SIZE-1;
+    	Tiles CurrentTile = mazeBoard.getTile(leftX, topY);
+    	Tiles CurrentTile2 = mazeBoard.getTile(rightX, bottomY);
+    	
+    	if (dx > 0){
+    		if ((rightX != rightXNew)){
+    			if (topY != bottomY && mazeBoard.getTile(rightXNew, topY).isWall(Tiles.SOUTH)){
+    				
+    			}else if (!CurrentTile.isWall(Tiles.EAST) && !CurrentTile2.isWall(Tiles.EAST)){
+    				x += dx;
+    			}
+    		}else{
+    			x += dx;
+    		}
+    	}else if (dx < 0){
+    		if (leftX != leftXNew){
+    			if (topY != bottomY && mazeBoard.getTile(leftXNew, topY).isWall(Tiles.SOUTH)){
+    				
+    			}else if (!CurrentTile.isWall(Tiles.WEST) && !CurrentTile2.isWall(Tiles.WEST)){
+    				x += dx;
+    			}
+    		}else{
+    			x += dx;
+    		}
+    	}
+    	
+    	leftX = (x-SOME_NUMBER2)/TILE_SIZE;
+    	rightX = (x-SOME_NUMBER2 + SQUARE_SIZE)/TILE_SIZE;
+    	CurrentTile = mazeBoard.getTile(leftX, topY);
+    	CurrentTile2 = mazeBoard.getTile(rightX, bottomY);
+    	if (dy > 0){
+    		if (bottomY != bottomYNew){
+    			if (leftX != rightX && mazeBoard.getTile(rightX, bottomYNew).isWall(Tiles.EAST)){
+    			}else if (!CurrentTile.isWall(Tiles.SOUTH) && !CurrentTile2.isWall(Tiles.SOUTH)){
+        			y += dy;
+        		}
+    		}else{
+    			y += dy;
+    		}
+    	}else if (dy < 0){
+    		if (topY != topYNew){
+    			if (leftX != rightX && mazeBoard.getTile(rightX, bottomYNew).isWall(Tiles.EAST)){
+    			}else if (!CurrentTile.isWall(Tiles.NORTH) && !CurrentTile2.isWall(Tiles.NORTH)){
+    				y+= dy;
+        		}
+    		}else{
+    			y += dy;
+    		}
+    	}
+    	x = Math.max(SOME_NUMBER2, x);
+    	
+        
         repaint();
     }
 
@@ -170,4 +233,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     public void keyTyped(KeyEvent arg0) {
         // TODO Auto-generated method stub
     }
+    
+    
 }
