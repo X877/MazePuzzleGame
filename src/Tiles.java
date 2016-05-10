@@ -2,13 +2,16 @@
  * Used to create walls on the maze board and locate player
  */
 public class Tiles {
-    private boolean wallN;
-    private boolean wallE;
-    private boolean wallS;
-    private boolean wallW;
+	private final static int NORTH = 0;
+	private final static int EAST = 1;
+	private final static int SOUTH = 2;
+	private final static int WEST = 3;
+	private final static int NUMWALLS = 4;
+
+	private boolean[] walls;
     private boolean hasPlayer;
     private boolean startPoint;
-    private boolean endPoint;
+	private boolean endPoint;
 
     /**
      * Constructor for Tiles class
@@ -16,46 +19,22 @@ public class Tiles {
      * tiles by default
      */
     public Tiles() {
-        this.wallN = true;
-        this.wallE = true;
-        this.wallS = true;
-        this.wallW = true;
+		for(int curWall = 0; curWall < NUMWALLS; curWall++){
+			this.walls[curWall] = true;
+		}
         this.hasPlayer = false;
         this.startPoint = false;
         this.endPoint = false;
+        walls = new boolean[NUMWALLS];
     }
 
-    public boolean isWallN() {
-        return wallN;
-    }
+	public boolean isWall(int wallDirection){
+		return walls[wallDirection];
+	}
 
-    public void setWallN(boolean wallN) {
-        this.wallN = wallN;
-    }
-
-    public boolean isWallE() {
-        return wallE;
-    }
-
-    public void setWallE(boolean wallE) {
-        this.wallE = wallE;
-    }
-
-    public boolean isWallS() {
-        return wallS;
-    }
-
-    public void setWallS(boolean wallS) {
-        this.wallS = wallS;
-    }
-
-    public boolean isWallW() {
-        return wallW;
-    }
-
-    public void setWallW(boolean wallW) {
-        this.wallW = wallW;
-    }
+	public void setWall(int wallDirection, boolean value){
+		walls[wallDirection] = value;
+	}
 
     public boolean isHasPlayer() {
         return hasPlayer;
