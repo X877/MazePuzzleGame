@@ -32,6 +32,12 @@ Move player done (Richie, Darren, Nicholas)
 
 
 Week 10
+Daaron - Beers and Hd's
+Nicholas - start, end and panels, refactor the code to make it more collaborative
+Richie - Smooth transitions, Instructions screen, Credits screen
+Lochlan- Game GUI (Show timer, Exit button, pause button)
+Darren- Moving around classes between gui and board & fixing movement and collision detection
+
 Bots
 Coins
 Time limit
