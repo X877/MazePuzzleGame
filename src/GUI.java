@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
-import java.util.Random;
 
 
 /**
@@ -39,8 +38,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setPaint(Color.blue);
-
         Tiles currTile;
 
         int x1 = 0;
@@ -50,18 +47,25 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
             //Reserved space for start tile
-            //if (i == 0) {
-            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
-            //    y2 = y1;
-            //} else {
-                y1 = MAZE_BOTTOM - 2 * TILE_SIZE;
-                y2 = y1;
-            //}
-
+            y1 = MAZE_BOTTOM - 2 * TILE_SIZE;
+            y2 = y1;
             x1 = MAZE_LEFT + i * TILE_SIZE;
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
                 currTile = game.getBoard().getTile(i, j);
+
+                //Paint full green for start point
+                //Red for end point
+                if (currTile.isStartPoint()) {
+                    g2d.setPaint(Color.green);
+                    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
+                } else if (currTile.isEndPoint()) {
+                    g2d.setPaint(Color.red);
+                    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
+                }
+
+                g2d.setPaint(Color.blue);
+
 
                 //(x1, y1, x2, y2) coordinate format
                 //North wall
@@ -99,7 +103,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         }
         Player player = game.getPlayer();
         int playerSize = (int) (TILE_SIZE*Game.playerSize+1);
-        g2d.fillRect((int)(MAZE_LEFT+ player.getX()*TILE_SIZE), (int)(MAZE_BOTTOM-player.getY()*20-TILE_SIZE-playerSize), playerSize, playerSize);
+        g2d.fillRect((int) (MAZE_LEFT + player.getX() * TILE_SIZE), (int) (MAZE_BOTTOM - player.getY() * 20 - TILE_SIZE - playerSize), playerSize, playerSize);
     }
 
     @Override

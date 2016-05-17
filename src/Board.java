@@ -4,6 +4,7 @@ import java.util.ArrayList;
  * Setting up an empty board with grids as an arraylist of an arraylist
  */
 public class Board {
+    public final static int START_END_SPACE = 6;        //HAS TO BE EVEN
     private ArrayList<ArrayList<Tiles>> columns;
     private int height;
     private int width;
@@ -11,25 +12,42 @@ public class Board {
     public Board(int height, int width) {
         columns = new ArrayList<ArrayList<Tiles>>();
         this.height = height;
-        this.width = width;
+        this.width = width + START_END_SPACE;
 
-        //adding columns to the board arraylist
-        for (int i = 0; i < width; i++) {
+        //Adding columns to the board arraylist
+        for (int i = 0; i < this.width; i++) {
             ArrayList<Tiles> column = new ArrayList<Tiles>();
 
             for (int j = 0; j < height; j++) {
                 Tiles tile = new Tiles();
+
+                //Adding start and end space
+                //Checks to prevent 1 way wall at start and end
+                if (i < START_END_SPACE/2 - 1) {
+                    tile.setStartPoint(true);
+                    tile.setWall(Tiles.NORTH, false);
+                    tile.setWall(Tiles.EAST, false);
+                    tile.setWall(Tiles.SOUTH, false);
+                    tile.setWall(Tiles.WEST, false);
+                } else if (i == START_END_SPACE/2 - 1) {
+                    tile.setStartPoint(true);
+                    tile.setWall(Tiles.NORTH, false);
+                    tile.setWall(Tiles.SOUTH, false);
+                    tile.setWall(Tiles.WEST, false);
+                } else if (i == this.width - START_END_SPACE/2) {
+                    tile.setEndPoint(true);
+                    tile.setWall(Tiles.NORTH, false);
+                    tile.setWall(Tiles.EAST, false);
+                    tile.setWall(Tiles.SOUTH, false);
+                } else if (i > this.width - START_END_SPACE/2) {
+                    tile.setEndPoint(true);
+                    tile.setWall(Tiles.NORTH, false);
+                    tile.setWall(Tiles.EAST, false);
+                    tile.setWall(Tiles.SOUTH, false);
+                    tile.setWall(Tiles.WEST, false);
+                }
                 column.add(tile);
             }
-            //add extra tile for starting point and end point
-            //if (i == 0 || i == width-1) {
-            //    Tiles specialTile = new Tiles();
-            //    specialTile.setWall(0, false);
-            //    specialTile.setWall(1, false);
-            //    specialTile.setWall(2, false);
-            //    specialTile.setWall(3, false);
-            //    column.add(specialTile);
-            //}
             columns.add(column);
         }
 

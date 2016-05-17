@@ -26,20 +26,22 @@ public class PathGenerator {
 		int[] dirY = new int[]{1, 0, -1, 0};
 		boolean[] dirSeen = new boolean[Tiles.NUMWALLS];
 		int numDir = 0;
-		
+
 		while(numDir < 4){
 			int dir = rand.nextInt(4);
 			if(!dirSeen[dir]){
 				dirSeen[dir] = true;
 				numDir++;
-				
+
 				int newX = curX + dirX[dir];
 				int newY = curY + dirY[dir];
 				if(isInBound(newX, newY)){
 					if(!seen[newX][newY]){
-						board.getTile(curX, curY).setWall(dir, false);
-						//The weird mod thing gives the opposite direction.
-						board.getTile(newX, newY).setWall((dir+2)%Tiles.NUMWALLS, false);
+						if (!board.getTile(curX, curY).isStartPoint() && !board.getTile(curX, curY).isEndPoint()) {
+							board.getTile(curX, curY).setWall(dir, false);
+							//The weird mod thing gives the opposite direction.
+							board.getTile(newX, newY).setWall((dir + 2) % Tiles.NUMWALLS, false);
+						}
 						dfs(newX, newY);
 					}
 				}
