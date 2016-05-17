@@ -1,22 +1,22 @@
 
 public class Player {
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	
 	//Maybe change this
 	public Player(){
 		x = 0;
-		y = 0;
+		y = 18;
 	}
-	public int getX(){
+	public double getX(){
 		return x;
 	}
 	
-	public int getY(){
+	public double getY(){
 		return y;
 	}
 	
-	public void changeCoordinate(int x, int y){
+	public void setXY(double x, double y){
 		this.x = x;
 		this.y = y;
 	}
