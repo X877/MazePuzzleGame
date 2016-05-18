@@ -83,7 +83,7 @@ public class Game {
 		
 		if (dy > 0){
 			if (bottomY != bottomYNew){
-				if (leftX != rightX && board.getTile(rightX, bottomYNew).isWall(Tiles.EAST)){
+				if (leftX != rightX && board.getTile(rightX, bottomYNew).isWall(Tiles.WEST)){
 					
 				}else if (!currentTile.isWall(Tiles.NORTH) && !currentTile2.isWall(Tiles.NORTH)){
 					y += dy;
@@ -94,7 +94,7 @@ public class Game {
 		}
 		if (dy < 0){
 			if (topY != topYNew){
-				if (leftX != rightX && board.getTile(rightX, bottomYNew).isWall(Tiles.EAST)){
+				if (leftX != rightX && board.getTile(rightX, topYNew).isWall(Tiles.WEST)){
 					
 				}else if (!currentTile.isWall(Tiles.SOUTH) && !currentTile2.isWall(Tiles.SOUTH)){
 					y += dy;
@@ -104,18 +104,9 @@ public class Game {
 			}
 		}
 		
-		x = x*10 + 0.11;
-		x = (int) x;
-		x = x/10;
-		
-		y = y*10 + 0.11;
-		y = (int) y;
-		y = y/10;
-		
 		x = Math.max(x,0);
 		y = Math.max(y,0);
 		player.setXY(x,y);
-		System.out.println(x+ " " + y);
 		// Many code
 	}
 }

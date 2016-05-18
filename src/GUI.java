@@ -12,9 +12,9 @@ import java.util.HashSet;
  */
 
 public class GUI extends JPanel implements KeyListener, ActionListener{
-	private static int TILE_SIZE = 20;
-	private static int MAZE_BOTTOM = 550;
-	private static int MAZE_LEFT = 215;
+	private static int TILE_SIZE = 12;
+	private static int MAZE_BOTTOM = 960;			
+	private static int MAZE_LEFT = 500;
 	private static int tickTime = 16;
 	private HashSet<Character>keysPressed;
 	
@@ -59,9 +59,9 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 if (currTile.isStartPoint()) {
                     g2d.setPaint(Color.green);
                     g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
-                } else if (currTile.isEndPoint()) {
-                    g2d.setPaint(Color.red);
-                    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
+                //} else if (currTile.isEndPoint()) {
+                //    g2d.setPaint(Color.red);
+                //    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
                 }
 
                 g2d.setPaint(Color.blue);
@@ -103,7 +103,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         }
         Player player = game.getPlayer();
         int playerSize = (int) (TILE_SIZE*Game.playerSize+1);
-        g2d.fillRect((int) (MAZE_LEFT + player.getX() * TILE_SIZE), (int) (MAZE_BOTTOM - player.getY() * 20 - TILE_SIZE - playerSize), playerSize, playerSize);
+        g2d.fillRect((int) (MAZE_LEFT + player.getX() * TILE_SIZE), (int) (MAZE_BOTTOM - player.getY() * TILE_SIZE - TILE_SIZE - playerSize), playerSize, playerSize);
     }
 
     @Override
