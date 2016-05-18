@@ -46,5 +46,12 @@ Menue
 Finish
 
 Week 11
-Graphics
+Lachlan- Sprites, 3 backgrounds for 3 levels, win screen, lose screen, find music
+Richie- Screen transitions, add the images, add a timer level
+Nicholas - Add the sprites and walls
+Darren- Making the timer, make the game end, fog
+Daaron- Beers and HD's
+
+
+
 Finish off UML Diagram
