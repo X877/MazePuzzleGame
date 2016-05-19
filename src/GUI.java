@@ -4,7 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.util.HashSet;
+import java.util.Random;
 
 
 /**
@@ -12,10 +15,10 @@ import java.util.HashSet;
  */
 
 public class GUI extends JPanel implements KeyListener, ActionListener{
-	private static int TILE_SIZE = 12;
-	private static int MAZE_BOTTOM = 960;			
-	private static int MAZE_LEFT = 500;
-	private static int tickTime = 16;
+	private static int TILE_SIZE = 20;
+	private static int MAZE_BOTTOM = 550;
+	private static int MAZE_LEFT = 215;
+	public static final int tickTime = 20;
 	private HashSet<Character>keysPressed;
 	
 	private Game game;
@@ -38,6 +41,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         Graphics2D g2d = (Graphics2D) g;
 
+        g2d.setPaint(Color.blue);
+
         Tiles currTile;
 
         int x1 = 0;
@@ -47,25 +52,18 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
             //Reserved space for start tile
-            y1 = MAZE_BOTTOM - 2 * TILE_SIZE;
-            y2 = y1;
+            //if (i == 0) {
+            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
+            //    y2 = y1;
+            //} else {
+                y1 = MAZE_BOTTOM - 2 * TILE_SIZE;
+                y2 = y1;
+            //}
+
             x1 = MAZE_LEFT + i * TILE_SIZE;
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
                 currTile = game.getBoard().getTile(i, j);
-
-                //Paint full green for start point
-                //Red for end point
-                if (currTile.isStartPoint()) {
-                    g2d.setPaint(Color.green);
-                    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
-                //} else if (currTile.isEndPoint()) {
-                //    g2d.setPaint(Color.red);
-                //    g2d.fillRect(x1, y1, TILE_SIZE, TILE_SIZE);
-                }
-
-                g2d.setPaint(Color.blue);
-
 
                 //(x1, y1, x2, y2) coordinate format
                 //North wall
@@ -101,9 +99,29 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
             }
         }
+        
         Player player = game.getPlayer();
         int playerSize = (int) (TILE_SIZE*Game.playerSize+1);
-        g2d.fillRect((int) (MAZE_LEFT + player.getX() * TILE_SIZE), (int) (MAZE_BOTTOM - player.getY() * TILE_SIZE - TILE_SIZE - playerSize), playerSize, playerSize);
+        int playerDisplayX =(int)(MAZE_LEFT+ Game.roundDouble2(player.getX())*TILE_SIZE)+1;
+        int playerDisplayY = (int)(MAZE_BOTTOM-Game.roundDouble2(player.getY())*TILE_SIZE-TILE_SIZE-playerSize);
+        g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
+        int radius = 50;
+        int x = playerDisplayX + playerSize/2;
+        int y = playerDisplayY + playerSize/2;
+        int diameter = 100;
+        g2d.setColor(Color.BLACK);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
+        	      RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        Rectangle rect = new Rectangle(MAZE_LEFT, MAZE_BOTTOM - TILE_SIZE*game.getBoard().getHeight()-TILE_SIZE, game.getBoard().getWidth()*TILE_SIZE, TILE_SIZE*game.getBoard().getHeight());
+        Ellipse2D spot = new Ellipse2D.Float(
+                (float) x - (diameter / 2f),
+                (float) y - (diameter / 2f),
+                (float) diameter,
+                (float) diameter);
+        Area area = new Area(rect);
+        area.subtract(new Area(spot));
+        g2d.fill(area);
+        
     }
 
     @Override
@@ -115,6 +133,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	game.tick();
     	game.movePlayer(keysPressed);
         repaint();
     }

@@ -6,7 +6,7 @@ public class Player {
 	//Maybe change this
 	public Player(){
 		x = 0;
-		y = 18;
+		y = 0;
 	}
 	public double getX(){
 		return x;
