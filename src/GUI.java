@@ -133,6 +133,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	this.requestFocus();
     	game.tick();
     	game.movePlayer(keysPressed);
         repaint();
