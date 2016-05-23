@@ -7,7 +7,6 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.HashSet;
-import java.util.Random;
 
 
 /**
@@ -15,17 +14,21 @@ import java.util.Random;
  */
 
 public class GUI extends JPanel implements KeyListener, ActionListener{
-	private static int TILE_SIZE = 20;
-	private static int MAZE_BOTTOM = 550;
-	private static int MAZE_LEFT = 215;
+    
+    private int tileSize;
+    private int posFromBottom;
+    private int posFromLeft;
 	public static final int tickTime = 20;
 	private HashSet<Character>keysPressed;
 	
 	private Game game;
     private Timer actionTimer;
     
-    public GUI(Board mazeBoard) {
+    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft) {
         this.game = new Game(mazeBoard);
+        this.tileSize = tileSize;
+        this.posFromBottom = posFromBottom;
+        this.posFromLeft = posFromLeft;
         this.addKeyListener(this);
         this.setFocusable(true);
         this.actionTimer = new Timer(tickTime, this);
@@ -51,59 +54,53 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int y2 = 0;
 
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
-            //Reserved space for start tile
-            //if (i == 0) {
-            //    y1 = 550 - TILE_SIZE;       //Start at the bottom of the frame
-            //    y2 = y1;
-            //} else {
-                y1 = MAZE_BOTTOM - 2 * TILE_SIZE;
-                y2 = y1;
-            //}
+            y1 = posFromBottom - 2 * tileSize;
+            y2 = y1;
 
-            x1 = MAZE_LEFT + i * TILE_SIZE;
+            x1 = posFromLeft + i * tileSize;
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
                 currTile = game.getBoard().getTile(i, j);
 
                 //(x1, y1, x2, y2) coordinate format
                 //North wall
-                x2 = x1 + TILE_SIZE;
+                x2 = x1 + tileSize;
                 if (currTile.isWall(Tiles.NORTH)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //East wall
-                x1 += TILE_SIZE;
-                y2 += TILE_SIZE;
+                x1 += tileSize;
+                y2 += tileSize;
                 if (currTile.isWall(Tiles.EAST)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //South wall
-                y1 += TILE_SIZE;
-                x2 -= TILE_SIZE;
+                y1 += tileSize;
+                x2 -= tileSize;
                 if (currTile.isWall(Tiles.SOUTH)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //West wall
-                x1 -= TILE_SIZE;
-                y2 -= TILE_SIZE;
+                x1 -= tileSize;
+                y2 -= tileSize;
                 if (currTile.isWall(Tiles.WEST)) {
                     g2d.drawLine(x1, y1, x2, y2);
                 }
 
                 //Change position upwards for next iteration
-                y1 = y1 - 2 * TILE_SIZE;
+                y1 = y1 - 2 * tileSize;
                 y2 = y1;
 
             }
         }
         
         Player player = game.getPlayer();
-        int playerSize = (int) (TILE_SIZE*Game.playerSize+1);
-        int playerDisplayX =(int)(MAZE_LEFT+ Game.roundDouble2(player.getX())*TILE_SIZE)+1;
-        int playerDisplayY = (int)(MAZE_BOTTOM-Game.roundDouble2(player.getY())*TILE_SIZE-TILE_SIZE-playerSize);
+        int playerSize = (int) (tileSize*Game.playerSize+1);
+        int playerDisplayX =(int)(posFromLeft+ Game.roundDouble2(player.getX())*tileSize)+1;
+        int playerDisplayY = (int)(posFromBottom-Game.roundDouble2(player.getY())*tileSize-tileSize-playerSize);
         g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
         int radius = 50;
         int x = playerDisplayX + playerSize/2;
@@ -112,7 +109,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         g2d.setColor(Color.BLACK);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
         	      RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        Rectangle rect = new Rectangle(MAZE_LEFT, MAZE_BOTTOM - TILE_SIZE*game.getBoard().getHeight()-TILE_SIZE, game.getBoard().getWidth()*TILE_SIZE, TILE_SIZE*game.getBoard().getHeight());
+        Rectangle rect = new Rectangle(posFromLeft, posFromBottom - tileSize*game.getBoard().getHeight()-tileSize, game.getBoard().getWidth()*tileSize, tileSize*game.getBoard().getHeight());
         Ellipse2D spot = new Ellipse2D.Float(
                 (float) x - (diameter / 2f),
                 (float) y - (diameter / 2f),

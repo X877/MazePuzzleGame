@@ -1,19 +1,12 @@
-import java.awt.Font;
-
-//import java.awt.event.KeyAdapter;
-//Add enter button to play later
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+//import java.awt.event.KeyAdapter;
+//Add enter button to play later
 
 public class MenuLabel extends JLabel {
 	//Variables
@@ -47,17 +40,17 @@ public class MenuLabel extends JLabel {
 		btnPlay = new JButton("play");
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			frame.getContentPane().removeAll();
-			//Create a new board
-	        Board testBoard = new Board(20, 20);
-	        PathGenerator path = new PathGenerator(testBoard);
-	        path.genMaze();
+				frame.getContentPane().removeAll();
+				//Create a new board
+				Board testBoard = new Board(20, 20);
+				PathGenerator path = new PathGenerator(testBoard);
+				path.genMaze();
 
-	        GUI testGUI = new GUI(testBoard);
-		    frame.getContentPane().add(testGUI);
-	        frame.setTitle("Don't be a HOBO - Stage 1");
-	        frame.setLocationRelativeTo(null);
-			frame.revalidate();
+				GUI testGUI = new GUI(testBoard, 25, 600, 290);
+				frame.getContentPane().add(testGUI);
+				frame.setTitle("Don't be a HOBO - Stage 1");
+				frame.setLocationRelativeTo(null);
+				frame.revalidate();
 			}
 		});
       
