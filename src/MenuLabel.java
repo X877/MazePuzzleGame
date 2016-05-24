@@ -60,8 +60,22 @@ public class MenuLabel extends JLabel {
 	        public void keyPressed( KeyEvent e ) {
 	        	//VK_ENTER is synonymous with VK_SPACE
 	            if (e.getKeyCode() == KeyEvent.VK_ENTER){
-	    			MazeFrame mF = new MazeFrame();
-	    			mF.setVisible(true);
+	    			frame.getContentPane().removeAll();
+	    			frame.revalidate();
+	    			
+	    			//Create a new board
+	    	        Board testBoard = new Board(20, 20);
+	    	        PathGenerator path = new PathGenerator(testBoard);
+	    	        path.genMaze();
+	    	        GUI testGUI = new GUI(testBoard, 25, 600, 290);
+	    	        
+	    		    frame.getContentPane().add(testGUI);
+	    	        frame.setTitle("Don't be a HOBO - Stage 1");
+	    	        frame.setSize(1366, 768);
+	    	        frame.setVisible(true);
+	                testGUI.setVisible(true);
+	    	        frame.setLocationRelativeTo(null);
+	    			frame.revalidate();
 	            }
 	        }
 			@Override
@@ -142,6 +156,5 @@ public class MenuLabel extends JLabel {
 		this.add(btnCredits);
 	}
 }
-	
-	
 
+	
