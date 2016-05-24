@@ -1,9 +1,12 @@
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Queue;
+import java.util.Stack;
 
 public class Game {
 	// MOVEMENT PER TICK
 	public static double MovementPerTick = 0.1;
-	public static double playerSize = 0.4;
+	
 	public static final int PLAYING = 0;
 	public static final int WON = 1;
 	public static final int LOST = -1;
@@ -11,8 +14,10 @@ public class Game {
 	private int state;
 	private Board board;
 	private Player player;
+	private double playerSize;
 	
-	public Game(Board board){
+	public Game(Board board,double playerSize){
+		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
 		time = 1000 * 1000;
@@ -27,22 +32,38 @@ public class Game {
 		return player;
 	}
 	
+	public int getTime(){
+		return time;
+	}
+	
+	public double getPlayerSize(){
+		//System.out.println(playerSize);
+		return playerSize;
+	}
+	
 	public void tick(){
 		this.time -= GUI.tickTime;
 		if (this.time < 0 && this.state == PLAYING){
 			this.state = LOST;
 		}
-		System.out.println(time);
+		//System.out.println(time);
 	}
 	
-	public void movePlayer(HashSet<Character> keysPressed){
+	public void movePlayer(Stack<Character> keysPressed){
 		if (state != PLAYING){
 			return;
 		}
 		double dx = 0;
 		double dy = 0;
-		double x = player.getX();
-		double y = player.getY();
+		boolean xFirst = false;
+		boolean yFirst = false;
+		if (!keysPressed.isEmpty()){
+			if (keysPressed.peek() == 's' || keysPressed.peek() == 'w'){
+				yFirst = true;
+			}else{
+				xFirst = true;
+			}
+		}
 		if (keysPressed.contains('s')){
 			dy -= MovementPerTick;
 		}
@@ -55,46 +76,74 @@ public class Game {
 		if (keysPressed.contains('d')){
 			dx += MovementPerTick;
 		}
-		
+		player.setDirection(Player.NONE);
 		//dx = roundDouble(dx);
 		//dy = roundDouble(dy);
+		if (xFirst){
+			boolean xMoved = moveX(dx);
+			if (!xMoved){
+				moveY(dy);
+			}
+		}
 		
-		int leftX = (int) roundDouble(x);
-		int leftXNew = (int) roundDouble(x+dx);
+		if (yFirst){
+			boolean yMoved = moveY(dy);
+			if (!yMoved){
+				moveX(dx);
+			}
+		}
+		
+		double x = player.getX();
+		double y = player.getY();
+		
 		int rightX = (int) roundDouble(x + playerSize);
-		int rightXNew = (int) roundDouble(x+playerSize+dx);
+		int leftX = (int) roundDouble(x);
 		int topY = (int) roundDouble(y);
-		int topYNew = (int) roundDouble(y+dy);
 		int bottomY  = (int) roundDouble(y + playerSize);
-		int bottomYNew = (int) roundDouble(y+playerSize+dy);
 		Tiles currentTile = board.getTile(leftX, topY);
 		Tiles currentTile2 = board.getTile(rightX, bottomY);
+		
 		if (currentTile.isEndPoint() && currentTile2.isEndPoint()){
 			state = WON;
 			return;
 		}
+
+
+		System.out.println(x
+				+" "+ y);
+		// Many code
+	}
+	
+	public boolean moveX(double dx){
+		double x = player.getX();
+		double y = player.getY();
+		
+		int rightX = (int) roundDouble(x + playerSize);
+		int leftX = (int) roundDouble(x);
+		int leftXNew = (int) roundDouble(x+dx);
+		int rightXNew = (int) roundDouble(x+playerSize+dx);		
 		if (rightXNew >= board.getWidth()){
-			dx = 0;
+			return false;
 		}
-		if (bottomYNew >= board.getHeight()){
-			dy = 0;
-		}
-		if (dx != 0 && dy != 0){
-			dx = roundDouble(dx/roundDouble(Math.sqrt(2)));
-			dy = roundDouble(dy/roundDouble(Math.sqrt(2)));
-		}
+		
+		int topY = (int) roundDouble(y);
+		int bottomY  = (int) roundDouble(y + playerSize);
+		
+		Tiles currentTile = board.getTile(leftX, topY);
+		Tiles currentTile2 = board.getTile(rightX, bottomY);
+		
+		double xBefore = x;
 		if (dx > 0){
 			if (rightX != rightXNew){
 				if (topY != bottomY && board.getTile(rightXNew, topY).isWall(Tiles.NORTH)){
-					
 				}else if (!currentTile.isWall(Tiles.EAST) && !currentTile2.isWall(Tiles.EAST)){
 					x += dx;
 				}
 			}else{
 				x += dx;
 			}
-		}
-		if (dx < 0){
+			
+		}else if (dx < 0){
 			if (leftX != leftXNew){
 				if (topY != bottomY && board.getTile(leftXNew, topY).isWall(Tiles.NORTH)){
 					
@@ -105,25 +154,59 @@ public class Game {
 				x += dx;
 			}
 		}
-		leftX = (int) x;
-		rightX = (int)(x+playerSize);
 		
+		x = roundDouble(x);
+		y = roundDouble(y);
+		x = Math.max(x,0);
+		y = Math.max(y,0);
+		
+		if (xBefore == x){
+			return false;
+		}
+		
+		if (dx > 0){
+			player.setDirection(Player.RIGHT);
+		}else if (dx < 0){
+			player.setDirection(Player.LEFT);
+		}
+		player.setXY(x,y);
+		return true;
+	}
+	
+	public boolean moveY(double dy){
+		double x = player.getX();
+		double y = player.getY();
+		
+		int rightX = (int) roundDouble(x + playerSize);
+		int leftX = (int) roundDouble(x);
+		
+		int topY = (int) roundDouble(y);
+		int topYNew = (int) roundDouble(y+dy);
+		int bottomY  = (int) roundDouble(y + playerSize);
+		int bottomYNew = (int) roundDouble(y+playerSize+dy);
+		if (bottomYNew >= board.getHeight()){
+			return false;
+		}
+		
+		Tiles currentTile = board.getTile(leftX, topY);
+		Tiles currentTile2 = board.getTile(rightX, bottomY);
+		
+		double yBefore = y;
 		
 		if (dy > 0){
 			if (bottomY != bottomYNew){
 				if (leftX != rightX && board.getTile(rightX, bottomYNew).isWall(Tiles.WEST)){
-					
+					return false;
 				}else if (!currentTile.isWall(Tiles.NORTH) && !currentTile2.isWall(Tiles.NORTH)){
 					y += dy;
 				}
 			}else{
 				y += dy;
 			}
-		}
-		if (dy < 0){
+		}else if (dy < 0){
 			if (topY != topYNew){
 				if (leftX != rightX && board.getTile(rightX, topYNew).isWall(Tiles.WEST)){
-					
+					return false;
 				}else if (!currentTile.isWall(Tiles.SOUTH) && !currentTile2.isWall(Tiles.SOUTH)){
 					y += dy;
 				}
@@ -131,21 +214,29 @@ public class Game {
 				y += dy;
 			}
 		}
-		//int x = 100*0.1;
+		
 		x = roundDouble(x);
 		y = roundDouble(y);
 		x = Math.max(x,0);
 		y = Math.max(y,0);
+		
+		if (yBefore == y){
+			return false;
+		}
+		
+		if (dy > 0){
+			player.setDirection(Player.UP);
+		}else if (dy < 0){
+			player.setDirection(Player.DOWN);
+		}
+		
 		player.setXY(x,y);
-		// Many code
+		return true;
 	}
 	
 	double roundDouble(double x){
 		
 		return (double) Math.round(x * 100)/100;
 	}
-	public static double roundDouble2(double x){
-		
-		return (double) (int) (x * 10)/10;
-	}
+	
 }
