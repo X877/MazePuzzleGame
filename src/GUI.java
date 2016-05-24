@@ -166,7 +166,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_All.png")).getImage());
                         break;
                     case "UpRightDown":
-                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_RightUpDown.png")).getImage());
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_UpDownRight.png")).getImage());
                         break;
                     case "UpRightLeft":
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftRightUp.png")).getImage());
@@ -178,7 +178,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Up.png")).getImage());
                         break;
                     case "UpDownLeft":
-                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftUpDown.png")).getImage());
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_UpDownLeft.png")).getImage());
                         break;
                     case "UpDown":
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_UpDown.png")).getImage());
@@ -208,7 +208,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Left.png")).getImage());
                         break;
                     default:
-                        //currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Left.png")).getImage());
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_None.png")).getImage());
                         break;
                 }
 
