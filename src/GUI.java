@@ -18,7 +18,9 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int tileSize;
     private int posFromBottom;
     private int posFromLeft;
-	public static final int tickTime = 20;
+	public static final int tickTime = 10;
+	private static final int ticksPerImageRotation = 5;
+	private int subImageRotation = 0;
 	private int imageRotation = 0;
 	private Image[] leftPlayerImages;
 	private Image[] rightPlayerImages;
@@ -32,8 +34,9 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     
 
     public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft) {
-	this.game = new Game(mazeBoard,(double)16/tileSize);
+	
         this.tileSize = tileSize;
+        
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
 
@@ -46,7 +49,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.downPlayerImages = new Image[2];
         this.leftPlayerImages = new Image[2];
         this.rightPlayerImages = new Image[2];
-        this.stayingPlayerImages = new Image[2];
+        this.stayingPlayerImages = new Image[1];
+        
+        
+        this.game = new Game(mazeBoard,(double)16/this.tileSize);
         
         upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Backwards_1.png")).getImage();
         upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Backwards_2.png")).getImage();
@@ -61,10 +67,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         leftPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Left_2.png")).getImage();
         
         stayingPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Still.png")).getImage();
-        stayingPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Still.png")).getImage();
-
-        
         keysPressed = new Stack<Character>();
+        
+        this.subImageRotation = 0;
+        this.imageRotation = 0;
     }
 
     /**
@@ -131,42 +137,48 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         Player player = game.getPlayer();
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
-        int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+1-playerSize);
+        int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
         
     
-        if (game.getTime() % 200 == 0){
-        	this.imageRotation = (this.imageRotation+1)%2;
-        }
         
-        Image img = null; 
+        
+        Image img[] = null; 
         //g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
         if (player.getDirection() == Player.UP){
-        	img  = upPlayerImages[imageRotation];
-        	System.out.println("up");
+        	img  = upPlayerImages;
         }else if (player.getDirection() == Player.DOWN){
-        	img  = downPlayerImages[imageRotation];
-        	System.out.println("down");
+        	img  = downPlayerImages;
         }else if (player.getDirection() == Player.LEFT){
-        	img  = leftPlayerImages[imageRotation];
+        	img  = leftPlayerImages;
         }else if (player.getDirection() == Player.RIGHT){
-        	img  = rightPlayerImages[imageRotation];
+        	img  = rightPlayerImages;
         }else if (player.getDirection() == Player.NONE){
-        	img  = stayingPlayerImages[imageRotation];
-        }else{
-        	img  = stayingPlayerImages[0];
+        	img  = stayingPlayerImages;
         }
-        System.out.println(player.getDirection());
+        
+        subImageRotation++;
+        
+        if (subImageRotation == GUI.ticksPerImageRotation){
+        	this.imageRotation = (this.imageRotation+1)%img.length;
+        	subImageRotation = 0;
+        }
+        
+        if (img.length == 1){
+        	imageRotation = 0;
+        }
+        //System.out.println(imageRotation +" " + player.getDirection());
+        
+        //System.out.println(player.getDirection());
 
 
         
         //System.out.println("CurrentImage" +  this.image + img);
-        g2d.drawImage(img, playerDisplayX, playerDisplayY, null);
+        g2d.drawImage(img[imageRotation], playerDisplayX, playerDisplayY, null);
         
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
         int diameter = 500;
-        
         drawFog(xCentre,yCentre,diameter,g2d);
     
     }
@@ -208,7 +220,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	g2d.setColor(Color.BLACK);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
         	      RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        Rectangle rect = new Rectangle(posFromLeft, posFromBottom - tileSize*game.getBoard().getHeight()-tileSize, game.getBoard().getWidth()*tileSize, tileSize*game.getBoard().getHeight());
+        Rectangle rect = new Rectangle(posFromLeft, posFromBottom - tileSize*game.getBoard().getHeight()-tileSize,
+        		game.getBoard().getWidth()*tileSize, tileSize*game.getBoard().getHeight());
         Ellipse2D spot = new Ellipse2D.Float(
                 (float) xCentre - (diameter / 2f),
                 (float) yCentre - (diameter / 2f),

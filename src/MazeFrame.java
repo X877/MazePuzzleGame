@@ -15,7 +15,7 @@ public class MazeFrame extends JFrame{
         PathGenerator newBoard = new PathGenerator(testBoard);
         newBoard.genMaze();
 
-        GUI newGUI = new GUI(testBoard);
+        GUI newGUI = new GUI(testBoard,30,30,30);
         add(newGUI);
 
         //BoardPanel boardPanel = new BoardPanel(testBoard);

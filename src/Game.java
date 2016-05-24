@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class Game {
 	// MOVEMENT PER TICK
-	public static double MovementPerTick = 0.1;
+	public static double MovementPerTick = 0.03;
 	
 	public static final int PLAYING = 0;
 	public static final int WON = 1;
