@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Used to create walls on the maze board and locate player
  */
@@ -12,6 +14,7 @@ public class Tiles {
     private boolean hasPlayer;
     private boolean startPoint;
 	private boolean endPoint;
+    private Image tile;
 
     /**
      * Constructor for Tiles class
@@ -27,6 +30,7 @@ public class Tiles {
         this.hasPlayer = false;
         this.startPoint = false;
         this.endPoint = false;
+        //this.tile = new ImageIcon(this.getClass().getResource("/Tile_All.png")).getImage();
     }
 
 	public boolean isWall(int wallDirection){
@@ -59,5 +63,13 @@ public class Tiles {
 
     public void setEndPoint(boolean endPoint) {
         this.endPoint = endPoint;
+    }
+
+    public Image getTile() {
+        return tile;
+    }
+
+    public void setTile(Image tile) {
+        this.tile = tile;
     }
 }

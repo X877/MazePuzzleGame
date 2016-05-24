@@ -15,7 +15,7 @@ import java.util.Stack;
  */
 
 public class GUI extends JPanel implements KeyListener, ActionListener{
-	
+
     private int tileSize;
     private int posFromBottom;
     private int posFromLeft;
@@ -40,9 +40,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     
 
     public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft) {
-	
+
         this.tileSize = tileSize;
-        
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
 
@@ -60,7 +59,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
         
         
-        this.game = new Game(mazeBoard,(double)16/this.tileSize);
+        this.game = new Game(mazeBoard,(double)20/this.tileSize);
         
         upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Backwards_1.png")).getImage();
         upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Backwards_2.png")).getImage();
@@ -86,7 +85,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
      *
      * @param g
      */
-    private void doDrawing(Graphics g) {
+    private void drawBoard(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -95,51 +94,130 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         Tiles currTile;
 
         int x1 = 0;
-        int x2 = 0;
         int y1 = 0;
-        int y2 = 0;
 
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
             y1 = posFromBottom - 2 * tileSize;
-            y2 = y1;
-
-            x1 = posFromLeft + i * tileSize;
+            x1 = posFromLeft + (i * tileSize);
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
+                String tileToDraw = "";
                 currTile = game.getBoard().getTile(i, j);
 
-                //(x1, y1, x2, y2) coordinate format
-                //North wall
-                x2 = x1 + tileSize;
+                //All walls check (Start from North)
                 if (currTile.isWall(Tiles.NORTH)) {
-                    g2d.drawLine(x1, y1, x2, y2);
-                }
+                    tileToDraw = "Up";
+                    if (currTile.isWall(Tiles.EAST)) {
+                        tileToDraw = "UpRight";
+                        if (currTile.isWall(Tiles.SOUTH)) {
+                            tileToDraw = "UpRightDown";
+                            if (currTile.isWall(Tiles.WEST)) {
+                                tileToDraw = "All";
+                            }
+                        //North, East and West
+                        } else if (currTile.isWall(Tiles.WEST)) {
+                            tileToDraw = "UpRightLeft";
+                        }
+                    //North, South and West
+                    } else if (currTile.isWall(Tiles.SOUTH)) {
+                        tileToDraw = "UpDown";
+                        if (currTile.isWall(Tiles.WEST)) {
+                            tileToDraw = "UpDownLeft";
+                        }
+                    //North and West
+                    } else if (currTile.isWall(Tiles.WEST)) {
+                        tileToDraw = "UpLeft";
+                    }
 
                 //East wall
-                x1 += tileSize;
-                y2 += tileSize;
-                if (currTile.isWall(Tiles.EAST)) {
-                    g2d.drawLine(x1, y1, x2, y2);
+                } else if (currTile.isWall(Tiles.EAST)) {
+                    tileToDraw = "Right";
+                    //East and South
+                    if (currTile.isWall(Tiles.SOUTH)) {
+                        tileToDraw = "RightDown";
+                        //East, South and West
+                        if (currTile.isWall(Tiles.WEST)) {
+                            tileToDraw  = "RightDownLeft";
+                        }
+                    //East and West
+                    } else if (currTile.isWall(Tiles.WEST)) {
+                        tileToDraw = "RightLeft";
+                    }
+
                 }
 
                 //South wall
-                y1 += tileSize;
-                x2 -= tileSize;
-                if (currTile.isWall(Tiles.SOUTH)) {
-                    g2d.drawLine(x1, y1, x2, y2);
+                else if (currTile.isWall(Tiles.SOUTH)) {
+                    tileToDraw = "Down";
+                    //South and West
+                    if (currTile.isWall(Tiles.WEST)) {
+                        tileToDraw = "DownLeft";
+                    }
                 }
 
                 //West wall
-                x1 -= tileSize;
-                y2 -= tileSize;
-                if (currTile.isWall(Tiles.WEST)) {
-                    g2d.drawLine(x1, y1, x2, y2);
+                else if (currTile.isWall(Tiles.WEST)) {
+                    tileToDraw = "Left";
                 }
 
-                //Change position upwards for next iteration
-                y1 = y1 - 2 * tileSize;
-                y2 = y1;
+                //Decide which tiles to draw
+                switch (tileToDraw) {
+                    case "All":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_All.png")).getImage());
+                        break;
+                    case "UpRightDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_RightUpDown.png")).getImage());
+                        break;
+                    case "UpRightLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftRightUp.png")).getImage());
+                        break;
+                    case "UpRight":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_RightUp.png")).getImage());
+                        break;
+                    case "Up":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Up.png")).getImage());
+                        break;
+                    case "UpDownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftUpDown.png")).getImage());
+                        break;
+                    case "UpDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_UpDown.png")).getImage());
+                        break;
+                    case "UpLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftUp.png")).getImage());
+                        break;
+                    case "RightDownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftRightDown.png")).getImage());
+                        break;
+                    case "RightDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_RightDown.png")).getImage());
+                        break;
+                    case "RightLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftRight.png")).getImage());
+                        break;
+                    case "Right":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Right.png")).getImage());
+                        break;
+                    case "DownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_LeftDown.png")).getImage());
+                        break;
+                    case "Down":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Down.png")).getImage());
+                        break;
+                    case "Left":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Left.png")).getImage());
+                        break;
+                    default:
+                        //currTile.setTile(new ImageIcon(this.getClass().getResource("/Tile_Left.png")).getImage());
+                        break;
+                }
 
+                //If it's not start/end point, draw the tile
+                if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
+                    g2d.drawImage(currTile.getTile(), x1, y1, null);
+                }
+                //Change position upwards for next iteration
+                y1 -= tileSize;
             }
         }
         
@@ -188,7 +266,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
         int diameter = 500;
-        drawFog(xCentre,yCentre,diameter,g2d);
+        //drawFog(xCentre,yCentre,diameter,g2d);
     
     }
 
@@ -197,7 +275,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         super.paintComponent(g);
         tickTime();
         g.drawImage(img, 0, 0, this);
-        doDrawing(g);
+        drawBoard(g);
     }
 
     @Override
@@ -254,8 +332,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 		this.timerLbl.setBounds(583, 100, 200, 40);
 		this.add(timerLbl);
     }
-    
-    public void tickTime(){
-    	this.timerLbl.setText(Integer.toString(game.getTime()));
+
+    public void tickTime() {
+        this.timerLbl.setText(Integer.toString(game.getTime()));
     }
 }
