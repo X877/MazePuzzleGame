@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,10 +28,15 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	private Image[] upPlayerImages;
 	private Image[] downPlayerImages;
 	private Image[] stayingPlayerImages;
+	private Image img;
 	
 	private Stack<Character> keysPressed;
 	private Game game;
     private Timer actionTimer;
+    
+
+    private JLabel timerLbl;
+    private JButton btnBackToMenu;
     
 
     public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft) {
@@ -50,6 +56,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.leftPlayerImages = new Image[2];
         this.rightPlayerImages = new Image[2];
         this.stayingPlayerImages = new Image[1];
+        
+        this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
         
         
         this.game = new Game(mazeBoard,(double)16/this.tileSize);
@@ -71,6 +79,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         
         this.subImageRotation = 0;
         this.imageRotation = 0;
+        addTimerLbl();
     }
 
     /**
@@ -185,8 +194,9 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
+        tickTime();
+        g.drawImage(img, 0, 0, this);
         doDrawing(g);
     }
 
@@ -232,4 +242,20 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         g2d.fill(area);
     }
     
+    public void addTimerLbl(){
+		this.timerLbl = new JLabel();
+		this.timerLbl.setText(Integer.toString(game.getTime()));
+		
+		this.timerLbl.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
+		this.timerLbl.setForeground(Color.white);
+		this.timerLbl.setBorder(BorderFactory.createLineBorder(Color.white));
+		this.timerLbl.setVisible(true);
+		
+		this.timerLbl.setBounds(583, 100, 200, 40);
+		this.add(timerLbl);
+    }
+    
+    public void tickTime(){
+    	this.timerLbl.setText(Integer.toString(game.getTime()));
+    }
 }
