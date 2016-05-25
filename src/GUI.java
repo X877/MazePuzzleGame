@@ -19,8 +19,9 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int tileSize;
     private int posFromBottom;
     private int posFromLeft;
+    private int diameter;
 	public static final int tickTime = 10;
-	private static final int ticksPerImageRotation = 5;
+	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
 	private Image[] leftPlayerImages;
@@ -44,7 +45,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
-
+        this.diameter=0;
         this.addKeyListener(this);
         this.setFocusable(true);
         this.actionTimer = new Timer(tickTime, this);
@@ -56,10 +57,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.rightPlayerImages = new Image[2];
         this.stayingPlayerImages = new Image[1];
         
-        this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+        //this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
         
         
-        this.game = new Game(mazeBoard,(double)20/this.tileSize);
+        this.game = new Game(mazeBoard,(double)16/this.tileSize);
         
         upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Backwards_1.png")).getImage();
         upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Backwards_2.png")).getImage();
@@ -97,8 +98,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int y1 = 0;
 
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
-            y1 = posFromBottom - 2 * tileSize;
-            x1 = posFromLeft + (i * tileSize);
+            y1 = (int) (posFromBottom - 2 * tileSize);
+            x1 = (int) (posFromLeft + (i * tileSize));
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
                 String tileToDraw = "";
@@ -265,8 +266,17 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
-        int diameter = 500;
-        //drawFog(xCentre,yCentre,diameter,g2d);
+        
+        
+        if (game.getState() == game.LOST || game.getState() == game.WON) { 	
+    		diameter -= 5;     
+        } else if (game.getState() == game.PLAYING) {
+        	if (diameter != 4000) {
+            	diameter += 15;
+        	}
+        }
+        drawFog(xCentre,yCentre,diameter,g2d);
+
     
     }
 
