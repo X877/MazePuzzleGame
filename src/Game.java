@@ -20,7 +20,15 @@ public class Game {
 		time = 1000 * 1000;
 		state = PLAYING;
 	}
-	
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
 	public Board getBoard(){
 		return board;
 	}
