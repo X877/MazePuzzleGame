@@ -5,6 +5,7 @@ public class PathGenerator {
 	private boolean[][] seen;
 	private int width;
 	private int height;
+	private int bufferSpace;
 	private Board board;
 	private Random rand;
 
@@ -14,10 +15,11 @@ public class PathGenerator {
 		height = board.getHeight();
 		seen = new boolean[width][height];
 		rand = new Random();
+		bufferSpace = Board.START_END_SPACE/2;
 	}
 
 	private boolean isInBound(int curX, int curY){
-		return (curX >= 0 && curY >= 0 && curX < width && curY < height);
+		return (curX >= bufferSpace && curY >= 0 && curX < width-bufferSpace && curY < height);
 	}
 	
 	private void dfs(int curX, int curY){
@@ -49,10 +51,37 @@ public class PathGenerator {
 		}
 	}
 	
-	public void genMaze(){		
-		int startX = rand.nextInt(width);
+	public void genMaze(){
+		//need to remove all the walls in the start and end spaces.
+		Tiles startTile = board.getTile(bufferSpace, 0);
+		startTile.setWall(Tiles.WEST, false);
+		
+		Tiles endTile = board.getTile((width-1)-bufferSpace, height-1);
+		endTile.setWall(Tiles.EAST, false);
+		
+		for(int i = 0; i < bufferSpace; i++){
+			for(int j = 0; j < height; j++){
+				Tiles curTile = board.getTile(i, j);
+				for(int k = 0; k < 4; k++){
+					if(i == 2 && k == Tiles.EAST && j != 0){
+						continue;
+					}
+					curTile.setWall(k, false);
+				}
+				
+				curTile = board.getTile((width-1)-i, j);
+				for(int k = 0; k < 4; k++){
+					if(i == 2 && k == Tiles.WEST && j != height-1){
+						continue;
+					}
+					curTile.setWall(k, false);
+				}
+			}
+		}
+		
+		int startX = rand.nextInt(width - bufferSpace*2);
 		int startY = rand.nextInt(height);
-		dfs(startX, startY);
+		dfs(startX + bufferSpace, startY);
 	}
 
 	public boolean[][] getSeen() {
