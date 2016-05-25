@@ -42,12 +42,10 @@ public class MenuLabel extends JLabel {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
 				//Create a new board
-				Board testBoard = new Board(20, 20);
-				PathGenerator path = new PathGenerator(testBoard);
-				path.genMaze();
+				LevelGenerator gennie = new LevelGenerator(2);
+				GUI easy = gennie.levelGen();
 
-				GUI testGUI = new GUI(testBoard, 25, 600, 290);
-				frame.getContentPane().add(testGUI);
+				frame.getContentPane().add(easy);
 				frame.setTitle("Don't be a HOBO - Stage 1");
 				frame.setLocationRelativeTo(null);
 				frame.revalidate();
@@ -56,34 +54,35 @@ public class MenuLabel extends JLabel {
       
 		//Allows the game to start by simply pressing enter or space bar
 	    btnPlay.addKeyListener(new KeyListener() {
-	        @Override
-	        public void keyPressed( KeyEvent e ) {
-	        	//VK_ENTER is synonymous with VK_SPACE
-	            if (e.getKeyCode() == KeyEvent.VK_ENTER){
-	    			frame.getContentPane().removeAll();
-	    			frame.revalidate();
-	    			
-	    			//Create a new board
-	    	        Board testBoard = new Board(20, 20);
-	    	        PathGenerator path = new PathGenerator(testBoard);
-	    	        path.genMaze();
-	    	        GUI testGUI = new GUI(testBoard, 25, 600, 290);
-	    	        
-	    		    frame.getContentPane().add(testGUI);
-	    	        frame.setTitle("Don't be a HOBO - Stage 1");
-	    	        frame.setSize(1366, 768);
-	    	        frame.setVisible(true);
-	                testGUI.setVisible(true);
-	    	        frame.setLocationRelativeTo(null);
-	    			frame.revalidate();
-	            }
-	        }
 			@Override
-			public void keyTyped(KeyEvent e) {	
+			public void keyPressed(KeyEvent e) {
+				//VK_ENTER is synonymous with VK_SPACE
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					frame.getContentPane().removeAll();
+					frame.revalidate();
+
+					//Create a new board
+
+					LevelGenerator gennie = new LevelGenerator(1);
+					GUI easy = gennie.levelGen();
+
+					frame.getContentPane().add(easy);
+					frame.setTitle("Don't be a HOBO - Stage 1");
+					frame.setSize(1366, 768);
+					frame.setVisible(true);
+					easy.setVisible(true);
+					frame.setLocationRelativeTo(null);
+					frame.revalidate();
+				}
 			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
 			public void keyReleased(KeyEvent e) {
 			}
-	    } );
+		});
 	    
 	    
 		btnPlay.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
@@ -103,7 +102,7 @@ public class MenuLabel extends JLabel {
 				HighScoresLabel labelHighScores = new HighScoresLabel(frame);
 				labelHighScores.setVisible(true);
 				frame.getContentPane().removeAll();
-			    frame.getContentPane().add(labelHighScores);
+				frame.getContentPane().add(labelHighScores);
 				frame.revalidate();
 			}
 		});
@@ -155,6 +154,7 @@ public class MenuLabel extends JLabel {
 		btnCredits.setBounds(580 ,460, 200, 50);
 		this.add(btnCredits);
 	}
+
 }
 
 	
