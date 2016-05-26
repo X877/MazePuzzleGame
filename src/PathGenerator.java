@@ -84,7 +84,7 @@ public class PathGenerator {
 			for(int j = 0; j < height; j++){
 				Tiles curTile = board.getTile(i, j);
 				for(int k = 0; k < 4; k++){
-					if(i == 2 && k == Tiles.EAST && j != 0){
+					if(i == bufferSpace-1 && k == Tiles.EAST && j != 0){
 						continue;
 					}
 					curTile.setWall(k, false);
@@ -92,7 +92,7 @@ public class PathGenerator {
 				
 				curTile = board.getTile((width-1)-i, j);
 				for(int k = 0; k < 4; k++){
-					if(i == 2 && k == Tiles.WEST && j != height-1){
+					if(i == bufferSpace-1 && k == Tiles.WEST && j != height-1){
 						continue;
 					}
 					curTile.setWall(k, false);
