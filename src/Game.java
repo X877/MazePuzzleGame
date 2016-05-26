@@ -6,7 +6,9 @@ public class Game {
 	
 	public static final int PLAYING = 0;
 	public static final int WON = 1;
+	public static final int PAUSED = 2;
 	public static final int LOST = -1;
+	private int visionRange;
 	private int time;
 	private int state;
 	private Board board;
@@ -19,6 +21,19 @@ public class Game {
 		player = new Player();
 		time = 10*100;
 		state = PLAYING;
+		visionRange = 0;
+	}
+	
+	public int getVisionRange(){
+		return visionRange;
+	}
+	
+	public void setVisionRange(int visionRange){
+		this.visionRange = visionRange; 
+	}
+	
+	public void addVisionRange(int range){
+		this.visionRange += range; 
 	}
 
 	public int getState() {
@@ -51,6 +66,19 @@ public class Game {
 		if (this.time < 0 && this.state == PLAYING){
 			this.state = LOST;
 		}
+		if (state == PLAYING){
+			if (visionRange < 100) {
+	            visionRange += 1;
+	        }
+		}
+		
+		if (state == LOST){
+			if (visionRange > 0){
+				visionRange -= 2;
+			}
+			visionRange = Math.max(0,visionRange);
+		}
+		
 		//System.out.println(time);
 	}
 	
