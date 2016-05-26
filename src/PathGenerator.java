@@ -51,8 +51,29 @@ public class PathGenerator {
 		}
 	}
 	
-	public void genMaze(){
-		//need to remove all the walls in the start and end spaces.
+	private void addPowerUps(){
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				seen[i][j] = false;
+			}
+		}
+		
+		//Tiles[][] prevTile = new Tiles[width][height];
+		int curX, curY; 
+		int numPowerUps = ((width-bufferSpace*2) * height)/15;
+		while(numPowerUps > 0){
+			do{
+				curX = rand.nextInt(width - bufferSpace*2) + bufferSpace;
+				curY = rand.nextInt(height);
+			} while (seen[curX][curY]);
+			seen[curX][curY] = true;
+			Tiles curTile = board.getTile(curX, curY);
+			curTile.setState((numPowerUps%3) + 1);
+			numPowerUps--;
+		}
+	}
+	
+	private void startAndEnd(){
 		Tiles startTile = board.getTile(bufferSpace, 0);
 		startTile.setWall(Tiles.WEST, false);
 		
@@ -78,10 +99,15 @@ public class PathGenerator {
 				}
 			}
 		}
-		
+	}
+	
+	public void genMaze(){
+		//need to remove all the walls in the start and end spaces.
+		startAndEnd();		
 		int startX = rand.nextInt(width - bufferSpace*2);
 		int startY = rand.nextInt(height);
 		dfs(startX + bufferSpace, startY);
+		addPowerUps();
 	}
 
 	public boolean[][] getSeen() {
