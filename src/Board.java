@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Setting up an empty board with grids as an arraylist of an arraylist
  */
 public class Board {
-    public final static int START_END_SPACE = 6;        //HAS TO BE EVEN
+    public final static int START_END_SPACE = 4;        //HAS TO BE EVEN
     private ArrayList<ArrayList<Tiles>> columns;
     private int height;
     private int width;
