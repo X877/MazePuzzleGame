@@ -8,6 +8,14 @@ public class Game {
 	public static final int WON = 1;
 	public static final int PAUSED = 2;
 	public static final int LOST = -1;
+	private static final int INITIAL_VISION_BUFFER_TIME = 2500;
+	private static final int INITIAL_COFFEE_SPEEDUP_TIME = 3000;
+	private static final int BOOK_TIME_BONUS = 8000;
+	private static final int BEER_VISION_RANGE = 8;
+	private static final int MAX_VISION_RANGE = 100;
+	
+	private int coffeeSpeedupTime;
+	private int visionBufferTime;
 	private int visionRange;
 	private int time;
 	private int state;
@@ -16,6 +24,7 @@ public class Game {
 	private double playerSize;
 	
 	public Game(Board board,double playerSize){
+		this.visionBufferTime = 0;
 		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
@@ -66,10 +75,32 @@ public class Game {
 		if (this.time < 0 && this.state == PLAYING){
 			this.state = LOST;
 		}
+		if (visionBufferTime > 0){
+			visionBufferTime -= GUI.tickTime;
+		}
+		if (visionBufferTime < 0){
+			visionBufferTime = 0;
+		}
+		
+		if (coffeeSpeedupTime > 0){
+			coffeeSpeedupTime-= GUI.tickTime;
+		}
+		if (coffeeSpeedupTime < 0){
+			coffeeSpeedupTime = 0;
+		}
+		if (coffeeSpeedupTime > 0){
+			MovementPerTick = 0.3;
+		}else{
+			MovementPerTick = 0.15;
+		}
+		
+		
 		if (state == PLAYING){
-			if (visionRange < 110) {
-	            visionRange += 1;
-	        }
+			if (visionBufferTime == 0){
+				if (visionRange < MAX_VISION_RANGE) {
+		            visionRange += 1;
+		        }
+			}
 		}
 		
 		if (state == LOST){
@@ -141,8 +172,40 @@ public class Game {
 			return;
 		}
 
-		if (currentTile.getState() != 0) {
-			currentTile.setState(0);
+		if (currentTile.getState() != Tiles.EMPTY) {
+			if (currentTile.getState() == Tiles.BEER){
+				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
+				if (visionRange > BEER_VISION_RANGE){
+					visionRange = BEER_VISION_RANGE;
+				}else{
+					visionRange -= 5;
+				}
+			}
+			if (currentTile.getState() == Tiles.BOOK){
+				time += BOOK_TIME_BONUS;
+			}
+			if (currentTile.getState() == Tiles.COFFEE){
+				coffeeSpeedupTime = Game.INITIAL_COFFEE_SPEEDUP_TIME;
+			}
+			currentTile.setState(Tiles.EMPTY);
+		}
+		
+		if (currentTile2.getState() != Tiles.EMPTY) {
+			if (currentTile2.getState() == Tiles.BEER){
+				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
+				if (visionRange > BEER_VISION_RANGE){
+					visionRange = BEER_VISION_RANGE;
+				}else{
+					visionRange -= 5;
+				}
+			}
+			if (currentTile2.getState() == Tiles.BOOK){
+				time += BOOK_TIME_BONUS;
+			}
+			if (currentTile2.getState() == Tiles.COFFEE){
+				coffeeSpeedupTime = Game.INITIAL_COFFEE_SPEEDUP_TIME;
+			}
+			currentTile2.setState(Tiles.EMPTY);
 		}
 
 

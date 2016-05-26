@@ -20,7 +20,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int posFromBottom;
     private int posFromLeft;
     private int counter;
-    public static final int tickTime = 10;
+    public static final int tickTime = 40;
 	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
@@ -131,11 +131,11 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                     g2d.drawImage(currTile.getTile(), x1, y1, null);
 
                     if (currTile.getState() != 0) {
-                        if (currTile.getState() == 1) {
+                        if (currTile.getState() == Tiles.BEER) {
                             tileToDraw = "Beer";
-                        } else if (currTile.getState() == 2) {
+                        } else if (currTile.getState() == Tiles.COFFEE) {
                             tileToDraw = "Coffee";
-                        } else {
+                        } else if (currTile.getState() == Tiles.BOOK){
                             tileToDraw = "Book";
                         }
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/" + tileToDraw + ".png")).getImage());
