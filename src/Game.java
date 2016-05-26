@@ -17,7 +17,7 @@ public class Game {
 		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
-		time = 1000 * 1000;
+		time = 10*100;
 		state = PLAYING;
 	}
 
