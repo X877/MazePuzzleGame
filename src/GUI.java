@@ -35,13 +35,23 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	private Stack<Character> keysPressed;
 	private Game game;
     private Timer actionTimer;
-    
+    private JFrame exitMainMenu;
 
     private JLabel timerLbl;
     private JButton btnBackToMenu;
+    private JLabel fadeLoseLbl;
+    private Timer fadeTimer;
+    private JTextArea levelScore;
+    private JTextArea totalScore;
+    private int endTime;
+    
     
 
-    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty) {
+    private JFrame frame;
+    
+    
+
+    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame){
 
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
@@ -58,6 +68,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.leftPlayerImages = new Image[2];
         this.rightPlayerImages = new Image[2];
         this.stayingPlayerImages = new Image[1];
+        this.endTime = 0;
+        addBackToMenuBtn(frame);
+        this.frame = frame;
+
         
         //this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
         
@@ -89,7 +103,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
      * @param g
      */
     private void drawBoard(Graphics g) {
-
+      
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setPaint(Color.blue);
@@ -98,7 +112,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         int x1 = 0;
         int y1 = 0;
-
+        
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
             y1 = (int) (posFromBottom - 2 * tileSize);
             x1 = (int) (posFromLeft + (i * tileSize));
@@ -320,8 +334,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                             break;
                     }
                 }
-
-
                 //If it's not start/end point, draw the tile
                 if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
                     g2d.drawImage(currTile.getTile(), x1, y1, null);
@@ -335,11 +347,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
         int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
-        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        
-    
-        
-        
+        //System.out.println("Working Directory = " + System.getProperty("user.dir"));  
         Image img[] = null; 
         //g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
         if (player.getDirection() == Player.UP){
@@ -353,7 +361,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         }else if (player.getDirection() == Player.NONE){
         	img  = stayingPlayerImages;
         }
-        
+   
         subImageRotation++;
         
         if (subImageRotation == GUI.ticksPerImageRotation){
@@ -364,28 +372,68 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         if (img.length == 1){
         	imageRotation = 0;
         }
-        //System.out.println(imageRotation +" " + player.getDirection());
-        
-        //System.out.println(player.getDirection());
 
-
-        
-        //System.out.println("CurrentImage" +  this.image + img);
         g2d.drawImage(img[imageRotation], playerDisplayX, playerDisplayY, null);
         
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
         
-        
-        if (game.getState() == game.LOST || game.getState() == game.WON) { 	
-    		diameter -= 5;     
+        if (game.getState() == game.LOST) { 
+        	//Make the game screen fade to black
+    		diameter -= 80;
+    		//Change the timer text
+    		this.timerLbl.setText("TIME IS UP!!!");
+            //Store the end time once only
+    		if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
+    			this.endTime = Math.abs(game.getTime());  
+    		}
+    		System.out.println(this.endTime + " " + Math.abs(game.getTime()));
+    		//Game waits 450ms for the fog to cover the screen before going to the lose screen
+    		if(Math.abs(game.getTime())- this.endTime >= 450){
+    			actionTimer.stop();
+    			JButton exit = new JButton();
+    			JLabel loseLabel = new JLabel();
+    		    Image loseImage  = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+    			exit = new JButton("Return To Main Menu");
+    			exit.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
+    			exit.setBounds(583, 350, 300, 150);
+    			loseLabel.setIcon(new ImageIcon(loseImage));
+    			loseLabel.add(exit);
+				frame.getContentPane().removeAll();
+			    frame.getContentPane().add(loseLabel);
+				frame.revalidate();
+				
+                //Adds a button to go back to menu
+    			exit.addActionListener(new ActionListener() {
+    				public void actionPerformed(ActionEvent e) {
+    					MenuLabel menu = new MenuLabel(frame);
+    					menu.setVisible(true);	
+    					frame.getContentPane().removeAll();
+    				    frame.getContentPane().add(menu);
+    					frame.revalidate();
+    				}
+    			});
+    			
+    		    /*
+        	    Font end = new Font("Copperplate Gothic Light", Font.BOLD, 30);
+        	    g.setFont(end);
+        	    g.setColor(Color.WHITE);
+        	    g.drawString("Time has run out. You have to live among other hobos", 236, 200);
+        	   */
+                //actionTimer.stop();
+    		}
+    		
+        } else if (game.getState() == game.WON){
+        	
+    		
         } else if (game.getState() == game.PLAYING) {
         	if (diameter != 4000) {
             	diameter += 25;
         	}
         }
+       
         drawFog(xCentre, yCentre, diameter, g2d);
-
+        
     
     }
 
@@ -442,12 +490,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     public void addTimerLbl(){
 		this.timerLbl = new JLabel();
 		this.timerLbl.setText(Integer.toString(game.getTime()));
-		
 		this.timerLbl.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
 		this.timerLbl.setForeground(Color.white);
 		this.timerLbl.setBorder(BorderFactory.createLineBorder(Color.white));
 		this.timerLbl.setVisible(true);
-		
 		this.timerLbl.setBounds(583, 100, 200, 40);
 		this.add(timerLbl);
     }
@@ -455,4 +501,55 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     public void tickTime() {
         this.timerLbl.setText(Integer.toString(game.getTime()));
     }
+    
+    public void addBackToMenuBtn(final JFrame frame){
+		btnBackToMenu = new JButton("Main Menu");
+		btnBackToMenu.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
+		btnBackToMenu.setBounds(583, 550, 200, 50);
+		add(btnBackToMenu);
+		
+        //If the button is pressed open up the window option and pause the game
+		btnBackToMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				actionTimer.stop();
+			    String message = "Are you sure you wish to exit to main menu?";
+			    int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
+			    if(answer == JOptionPane.YES_NO_OPTION) {
+			        MenuLabel menu = new MenuLabel(frame);
+					menu.setVisible(true);	
+					frame.getContentPane().removeAll();
+					frame.getContentPane().add(menu);
+				    frame.revalidate();
+			    } else if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION){
+			    	//continue the game
+			        actionTimer.start();
+			        exitMainMenu.getContentPane().removeAll();
+					exitMainMenu.revalidate();	
+			    } 
+			}
+		});
+	}
+    
+    public void goBackToMenuPanel(final JFrame frame){
+    	JLabel endGame = new JLabel();
+        Image img2;
+        endGame.setText("");
+		img2 = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+		endGame.setIcon(new ImageIcon(img2));
+		
+		endGame.setVisible(true);
+		this.setVisible(true);
+		this.revalidate();
+		frame.getContentPane().removeAll();
+		frame.getContentPane().add(endGame);
+	    frame.revalidate();
+    }
+    
+    public void addLevelHighScore(){
+    	
+    }
+    public void addTotalHighScore(){
+    	
+    }
 }
+
