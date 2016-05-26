@@ -43,7 +43,7 @@ public class MenuLabel extends JLabel {
 				frame.getContentPane().removeAll();
 				//Create a new board
 				LevelGenerator gennie = new LevelGenerator(2);
-				GUI easy = gennie.levelGen();
+				GUI easy = gennie.levelGen(frame);
 
 				frame.getContentPane().add(easy);
 				frame.setTitle("Don't be a HOBO - Stage 1");
@@ -64,7 +64,7 @@ public class MenuLabel extends JLabel {
 					//Create a new board
 
 					LevelGenerator gennie = new LevelGenerator(1);
-					GUI easy = gennie.levelGen();
+					GUI easy = gennie.levelGen(frame);
 
 					frame.getContentPane().add(easy);
 					frame.setTitle("Don't be a HOBO - Stage 1");
@@ -158,3 +158,5 @@ public class MenuLabel extends JLabel {
 }
 
 	
+
+
