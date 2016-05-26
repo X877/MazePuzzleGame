@@ -19,7 +19,7 @@ public class Game {
 		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
-		time = 10*100;
+		time = 100*100;
 		state = PLAYING;
 		visionRange = 0;
 	}
@@ -67,7 +67,7 @@ public class Game {
 			this.state = LOST;
 		}
 		if (state == PLAYING){
-			if (visionRange < 100) {
+			if (visionRange < 110) {
 	            visionRange += 1;
 	        }
 		}
@@ -141,9 +141,13 @@ public class Game {
 			return;
 		}
 
+		if (currentTile.getState() != 0) {
+			currentTile.setState(0);
+		}
 
-		System.out.println(x
-				+" "+ y);
+
+		//System.out.println(x
+		//		+" "+ y);
 		// Many code
 	}
 	

@@ -46,6 +46,12 @@ public class LevelGenerator {
                 path.genMaze();
                 maze = new GUI(hardBoard, 20, 715, 185, 3, frame);
                 return maze;
+            case 4:
+                Board expertBoard = new Board(33, 45);
+                path = new PathGenerator(expertBoard);
+                path.genMaze();
+                maze = new GUI(expertBoard, 20, 715, 185, 4, frame);
+                return maze;
 
         }
         return null;

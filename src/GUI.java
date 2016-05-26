@@ -19,13 +19,13 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int tileSize;
     private int posFromBottom;
     private int posFromLeft;
-    private int diameter;
-    private int difficulty;
-	public static final int tickTime = 10;
+    private int counter;
+    public static final int tickTime = 10;
 	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
     private String level;
+    private String count;
 	private Image[] leftPlayerImages;
 	private Image[] rightPlayerImages;
 	private Image[] upPlayerImages;
@@ -54,7 +54,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
-        this.difficulty = difficulty;
         this.addKeyListener(this);
         this.setFocusable(true);
         this.actionTimer = new Timer(tickTime, this);
@@ -85,7 +84,11 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             this.level = "Medium";
         } else if (difficulty == 3) {
             this.level = "Hard";
+        } else if (difficulty == 4) {
+            this.level = "Hopes&Dreams";
         }
+
+        this.count = "";
     }
 
     /**
@@ -93,21 +96,26 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
      * @param g
      */
     private void drawBoard(Graphics g) {
-      
+
         Graphics2D g2d = (Graphics2D) g;
         Tiles currTile;
 
         int x1 = 0;
         int y1 = 0;
-        
+        int powerUpX = 0;
+        int powerUpY = 0;
+
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
-            y1 = posFromBottom - (2 * tileSize);
             x1 = posFromLeft + (i * tileSize);
+            y1 = posFromBottom - (2 * tileSize);
+
+            powerUpX = (int) (x1 + (0.25 * tileSize));
+            powerUpY = (int) (y1 + (0.25 * tileSize));
+
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
                 currTile = game.getBoard().getTile(i, j);
                 String tileToDraw = wallChecks(currTile);
-
 
                 //Decide which tiles to draw
                 if (tileToDraw.equals("UpRightDownLeft")) {
@@ -118,17 +126,44 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                     currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_" + tileToDraw + ".png")).getImage());
                 }
 
-
-
                 //If it's not start/end point, draw the tile
                 if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
                     g2d.drawImage(currTile.getTile(), x1, y1, null);
+
+                    if (currTile.getState() != 0) {
+                        if (currTile.getState() == 1) {
+                            tileToDraw = "Beer";
+                        } else if (currTile.getState() == 2) {
+                            tileToDraw = "Coffee";
+                        } else {
+                            tileToDraw = "Book";
+                        }
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/" + tileToDraw + ".png")).getImage());
+                        g2d.drawImage(currTile.getTile(), powerUpX, powerUpY - counter /6, null);
+
+                    }
                 }
+
+                /*if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
+                    currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/Coffee.png")).getImage());
+                    g2d.drawImage(currTile.getTile(), powerUpX, powerUpY, null);
+                }*/
                 //currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/Coffee.png")).getImage());
                 //g2d.drawImage(currTile.getTile(), x1, y1, null);
                 //Change position upwards for next iteration
                 y1 -= tileSize;
+                powerUpY -= tileSize;
             }
+        }
+        if (counter == 18){
+            count = "down";
+        } else if (counter == 0) {
+            count = "up";
+        }
+        if (count.equals("up")) {
+            counter++;
+        } else if (count.equals("down")){
+            counter--;
         }
     }
 
