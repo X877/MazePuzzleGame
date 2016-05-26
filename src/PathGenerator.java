@@ -60,7 +60,7 @@ public class PathGenerator {
 		
 		//Tiles[][] prevTile = new Tiles[width][height];
 		int curX, curY; 
-		int numPowerUps = ((width-bufferSpace*2) * height)/15;
+		int numPowerUps = ((width-bufferSpace*2) * height)/5;
 		while(numPowerUps > 0){
 			do{
 				curX = rand.nextInt(width - bufferSpace*2) + bufferSpace;

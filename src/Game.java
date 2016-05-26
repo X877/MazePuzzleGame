@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Stack;
 
 public class Game {
@@ -9,12 +10,14 @@ public class Game {
 	public static final int PAUSED = 2;
 	public static final int LOST = -1;
 	private static final int INITIAL_VISION_BUFFER_TIME = 2500;
+	private static final int INITIAL_BEER_STUMBLE_TIME = 3500;
 	private static final int INITIAL_COFFEE_SPEEDUP_TIME = 3000;
 	private static final int BOOK_TIME_BONUS = 8000;
 	private static final int BEER_VISION_RANGE = 8;
 	private static final int MAX_VISION_RANGE = 100;
 	
 	private int coffeeSpeedupTime;
+	private int beerStumbleTime;
 	private int visionBufferTime;
 	private int visionRange;
 	private int time;
@@ -82,6 +85,13 @@ public class Game {
 			visionBufferTime = 0;
 		}
 		
+		if (beerStumbleTime > 0){
+			beerStumbleTime -= GUI.tickTime;
+		}
+		if (beerStumbleTime  < 0){
+			beerStumbleTime  = 0;
+		}
+		
 		if (coffeeSpeedupTime > 0){
 			coffeeSpeedupTime-= GUI.tickTime;
 		}
@@ -117,17 +127,21 @@ public class Game {
 		if (state != PLAYING){
 			return;
 		}
+		
+		
 		double dx = 0;
 		double dy = 0;
-		boolean xFirst = false;
+		boolean xFirst = true;
 		boolean yFirst = false;
 		if (!keysPressed.isEmpty()){
 			if (keysPressed.peek() == 's' || keysPressed.peek() == 'w'){
 				yFirst = true;
+				xFirst = false;
 			}else{
 				xFirst = true;
 			}
 		}
+		
 		if (keysPressed.contains('s')){
 			dy -= MovementPerTick;
 		}
@@ -140,6 +154,19 @@ public class Game {
 		if (keysPressed.contains('d')){
 			dx += MovementPerTick;
 		}
+		Random rand = new Random();
+		if (beerStumbleTime > 0){
+			dy += rand.nextDouble()%(MovementPerTick/0.6)*(double) beerStumbleTime/this.INITIAL_BEER_STUMBLE_TIME;
+			dx += rand.nextDouble()%(MovementPerTick/0.6)*(double) beerStumbleTime/this.INITIAL_BEER_STUMBLE_TIME;
+		}
+		
+		if (coffeeSpeedupTime > 0){
+			if (rand.nextInt(4) == 0){
+				dy = rand.nextDouble()%(MovementPerTick);
+				dx = rand.nextDouble()%(MovementPerTick);
+			}
+		}
+		
 		player.setDirection(Player.NONE);
 		//dx = roundDouble(dx);
 		//dy = roundDouble(dy);
@@ -175,6 +202,7 @@ public class Game {
 		if (currentTile.getState() != Tiles.EMPTY) {
 			if (currentTile.getState() == Tiles.BEER){
 				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
+				beerStumbleTime = Game.INITIAL_BEER_STUMBLE_TIME;
 				if (visionRange > BEER_VISION_RANGE){
 					visionRange = BEER_VISION_RANGE;
 				}else{
@@ -192,6 +220,7 @@ public class Game {
 		
 		if (currentTile2.getState() != Tiles.EMPTY) {
 			if (currentTile2.getState() == Tiles.BEER){
+				beerStumbleTime = Game.INITIAL_BEER_STUMBLE_TIME;
 				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
 				if (visionRange > BEER_VISION_RANGE){
 					visionRange = BEER_VISION_RANGE;
