@@ -140,16 +140,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                         }
                         currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/" + tileToDraw + ".png")).getImage());
                         g2d.drawImage(currTile.getTile(), powerUpX, powerUpY - counter /6, null);
-
                     }
                 }
-
-                /*if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
-                    currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/Coffee.png")).getImage());
-                    g2d.drawImage(currTile.getTile(), powerUpX, powerUpY, null);
-                }*/
-                //currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/PickUps/Coffee.png")).getImage());
-                //g2d.drawImage(currTile.getTile(), x1, y1, null);
                 //Change position upwards for next iteration
                 y1 -= tileSize;
                 powerUpY -= tileSize;
