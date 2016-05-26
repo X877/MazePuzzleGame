@@ -67,8 +67,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.endTime = 0;
         addBackToMenuBtn(frame);
         this.frame = frame;
-
-        //this.img = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
         
         this.game = new Game(mazeBoard,(double)16/this.tileSize);
 
@@ -87,6 +85,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         } else if (difficulty == 4) {
             this.level = "Hopes&Dreams";
         }
+        this.img = new ImageIcon(this.getClass().getResource("/images/" + level + "/Background.png")).getImage();
 
         this.count = "";
     }
