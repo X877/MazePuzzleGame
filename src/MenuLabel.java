@@ -23,7 +23,7 @@ public class MenuLabel extends JLabel {
 	MenuLabel(final JFrame frame){
 		this.setText("");
 		this.setBounds(0, 0, 1376, 768);
-		img = new ImageIcon(this.getClass().getResource("/image/wallpaper2.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/images/wallpaper2.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addPlayButton(frame);
 		addHighScoresButton(frame);

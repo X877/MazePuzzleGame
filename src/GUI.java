@@ -73,7 +73,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         addBackToMenuBtn(frame);
         this.frame = frame;
 
-        //this.img = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
+        //this.img = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
         
         this.game = new Game(mazeBoard,(double)16/this.tileSize);
 
@@ -262,7 +262,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 actionTimer.stop();
                 JButton exit = new JButton();
                 JLabel loseLabel = new JLabel();
-                Image loseImage  = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
+                Image loseImage  = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
                 exit = new JButton("Return To Main Menu");
                 exit.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
                 exit.setBounds(583, 350, 300, 150);
@@ -468,7 +468,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	JLabel endGame = new JLabel();
         Image img2;
         endGame.setText("");
-		img2 = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
+		img2 = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
 		endGame.setIcon(new ImageIcon(img2));
 		
 		endGame.setVisible(true);
