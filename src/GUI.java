@@ -310,56 +310,18 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
         //All walls check (Start from North)
         if (currTile.isWall(Tiles.NORTH)) {
-            tileToDraw = "Up";
-            if (currTile.isWall(Tiles.EAST)) {
-                tileToDraw = "UpRight";
-                if (currTile.isWall(Tiles.SOUTH)) {
-                    tileToDraw = "UpRightDown";
-                    if (currTile.isWall(Tiles.WEST)) {
-                        tileToDraw = "All";
-                    }
-                    //North, East and West
-                } else if (currTile.isWall(Tiles.WEST)) {
-                    tileToDraw = "UpRightLeft";
-                }
-                //North, South and West
-            } else if (currTile.isWall(Tiles.SOUTH)) {
-                tileToDraw = "UpDown";
-                if (currTile.isWall(Tiles.WEST)) {
-                    tileToDraw = "UpDownLeft";
-                }
-                //North and West
-            } else if (currTile.isWall(Tiles.WEST)) {
-                tileToDraw = "UpLeft";
-            }
-        //East wall
-        } else if (currTile.isWall(Tiles.EAST)) {
-            tileToDraw = "Right";
-            //East and South
-            if (currTile.isWall(Tiles.SOUTH)) {
-                tileToDraw = "RightDown";
-                //East, South and West
-                if (currTile.isWall(Tiles.WEST)) {
-                    tileToDraw  = "RightDownLeft";
-                }
-                //East and West
-            } else if (currTile.isWall(Tiles.WEST)) {
-                tileToDraw = "RightLeft";
-            }
+            tileToDraw += "Up";
+        }
+        if (currTile.isWall(Tiles.EAST)) {
+            tileToDraw += "Right";
+        }
+        if (currTile.isWall(Tiles.SOUTH)) {
+            tileToDraw += "Down";
+        }
+        if (currTile.isWall(Tiles.WEST)) {
+            tileToDraw += "Left";
+        }
 
-        }
-        //South wall
-        else if (currTile.isWall(Tiles.SOUTH)) {
-            tileToDraw = "Down";
-            //South and West
-            if (currTile.isWall(Tiles.WEST)) {
-                tileToDraw = "DownLeft";
-            }
-        }
-        //West wall
-        else if (currTile.isWall(Tiles.WEST)) {
-            tileToDraw = "Left";
-        }
         return tileToDraw;
     }
 
