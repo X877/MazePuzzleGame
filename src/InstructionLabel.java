@@ -1,11 +1,7 @@
-import java.awt.Font;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 public	class InstructionLabel extends JLabel{
 	//Variables
@@ -19,7 +15,7 @@ public	class InstructionLabel extends JLabel{
 	 */
 	InstructionLabel(final JFrame frame){
 		this.setText("");
-		img = new ImageIcon(this.getClass().getResource("/wallpaper1.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/image/wallpaper1.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addBackToMenuBtn(frame);
 	}

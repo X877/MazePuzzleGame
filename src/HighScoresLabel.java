@@ -1,13 +1,7 @@
-import java.awt.Font;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 public class HighScoresLabel extends JLabel {
     JButton btnBackToMenu;
@@ -26,7 +20,7 @@ public class HighScoresLabel extends JLabel {
 	 */
 	HighScoresLabel(final JFrame frame){
 		this.setText("");
-		img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		setHighScore();
 		addBackToMenuBtn(frame);

@@ -25,6 +25,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
+    private String level;
 	private Image[] leftPlayerImages;
 	private Image[] rightPlayerImages;
 	private Image[] upPlayerImages;
@@ -62,7 +63,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.setFocusable(true);
         this.actionTimer = new Timer(tickTime, this);
         this.actionTimer.start();
-        
+
         this.upPlayerImages = new Image[2];
         this.downPlayerImages = new Image[2];
         this.leftPlayerImages = new Image[2];
@@ -72,268 +73,98 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         addBackToMenuBtn(frame);
         this.frame = frame;
 
-        
-        //this.img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
-        
+        //this.img = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
         
         this.game = new Game(mazeBoard,(double)16/this.tileSize);
-        
-        upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Backwards_1.png")).getImage();
-        upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Backwards_2.png")).getImage();
-        
-        downPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Forwards_1.png")).getImage();
-        downPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Forwards_2.png")).getImage();
-        
-        rightPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Right_1.png")).getImage();
-        rightPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Right_2.png")).getImage();
-        
-        leftPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Left_1.png")).getImage();
-        leftPlayerImages[1] = new ImageIcon(this.getClass().getResource("/Player_Left_2.png")).getImage();
-        
-        stayingPlayerImages[0] = new ImageIcon(this.getClass().getResource("/Player_Still.png")).getImage();
+
         keysPressed = new Stack<Character>();
         
         this.subImageRotation = 0;
         this.imageRotation = 0;
         addTimerLbl();
+
+        if (difficulty == 1) {
+            this.level = "Easy";
+        } else if (difficulty == 2) {
+            this.level = "Medium";
+        } else if (difficulty == 3) {
+            this.level = "Hard";
+        }
     }
 
     /**
-     *
+     * Method to draw the maze board
      * @param g
      */
     private void drawBoard(Graphics g) {
       
         Graphics2D g2d = (Graphics2D) g;
-
-        g2d.setPaint(Color.blue);
-
         Tiles currTile;
 
         int x1 = 0;
         int y1 = 0;
         
         for (int i = 0; i < game.getBoard().getColumns().size(); i++) {
-            y1 = (int) (posFromBottom - 2 * tileSize);
-            x1 = (int) (posFromLeft + (i * tileSize));
+            y1 = posFromBottom - (2 * tileSize);
+            x1 = posFromLeft + (i * tileSize);
 
             for (int j = 0; j < game.getBoard().getColumns().get(i).size(); j++) {
-                String tileToDraw = "";
                 currTile = game.getBoard().getTile(i, j);
+                String tileToDraw = wallChecks(currTile);
 
-                //All walls check (Start from North)
-                if (currTile.isWall(Tiles.NORTH)) {
-                    tileToDraw = "Up";
-                    if (currTile.isWall(Tiles.EAST)) {
-                        tileToDraw = "UpRight";
-                        if (currTile.isWall(Tiles.SOUTH)) {
-                            tileToDraw = "UpRightDown";
-                            if (currTile.isWall(Tiles.WEST)) {
-                                tileToDraw = "All";
-                            }
-                        //North, East and West
-                        } else if (currTile.isWall(Tiles.WEST)) {
-                            tileToDraw = "UpRightLeft";
-                        }
-                    //North, South and West
-                    } else if (currTile.isWall(Tiles.SOUTH)) {
-                        tileToDraw = "UpDown";
-                        if (currTile.isWall(Tiles.WEST)) {
-                            tileToDraw = "UpDownLeft";
-                        }
-                    //North and West
-                    } else if (currTile.isWall(Tiles.WEST)) {
-                        tileToDraw = "UpLeft";
-                    }
-
-                //East wall
-                } else if (currTile.isWall(Tiles.EAST)) {
-                    tileToDraw = "Right";
-                    //East and South
-                    if (currTile.isWall(Tiles.SOUTH)) {
-                        tileToDraw = "RightDown";
-                        //East, South and West
-                        if (currTile.isWall(Tiles.WEST)) {
-                            tileToDraw  = "RightDownLeft";
-                        }
-                    //East and West
-                    } else if (currTile.isWall(Tiles.WEST)) {
-                        tileToDraw = "RightLeft";
-                    }
-
-                }
-
-                //South wall
-                else if (currTile.isWall(Tiles.SOUTH)) {
-                    tileToDraw = "Down";
-                    //South and West
-                    if (currTile.isWall(Tiles.WEST)) {
-                        tileToDraw = "DownLeft";
-                    }
-                }
-
-                //West wall
-                else if (currTile.isWall(Tiles.WEST)) {
-                    tileToDraw = "Left";
-                }
 
                 //Decide which tiles to draw
-
-                if (difficulty == 1) {
-                    switch (tileToDraw) {
-                        case "All":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_All.png")).getImage());
-                            break;
-                        case "UpRightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_UpDownRight.png")).getImage());
-                            break;
-                        case "UpRightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_LeftRightUp.png")).getImage());
-                            break;
-                        case "UpRight":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_RightUp.png")).getImage());
-                            break;
-                        case "Up":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_Up.png")).getImage());
-                            break;
-                        case "UpDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_UpDownLeft.png")).getImage());
-                            break;
-                        case "UpDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_UpDown.png")).getImage());
-                            break;
-                        case "UpLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_LeftUp.png")).getImage());
-                            break;
-                        case "RightDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_LeftRightDown.png")).getImage());
-                            break;
-                        case "RightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_RightDown.png")).getImage());
-                            break;
-                        case "RightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_LeftRight.png")).getImage());
-                            break;
-                        case "Right":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_Right.png")).getImage());
-                            break;
-                        case "DownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_LeftDown.png")).getImage());
-                            break;
-                        case "Down":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_Down.png")).getImage());
-                            break;
-                        case "Left":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_Left.png")).getImage());
-                            break;
-                        default:
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Easy/Tiles/Tile_None.png")).getImage());
-                            break;
-                    }
-
-                } else if (difficulty == 2) {
-                    switch (tileToDraw) {
-                        case "All":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_All.png")).getImage());
-                            break;
-                        case "UpRightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_UpDownRight.png")).getImage());
-                            break;
-                        case "UpRightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_LeftRightUp.png")).getImage());
-                            break;
-                        case "UpRight":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_RightUp.png")).getImage());
-                            break;
-                        case "Up":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_Up.png")).getImage());
-                            break;
-                        case "UpDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_UpDownLeft.png")).getImage());
-                            break;
-                        case "UpDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_UpDown.png")).getImage());
-                            break;
-                        case "UpLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_LeftUp.png")).getImage());
-                            break;
-                        case "RightDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_LeftRightDown.png")).getImage());
-                            break;
-                        case "RightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_RightDown.png")).getImage());
-                            break;
-                        case "RightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_LeftRight.png")).getImage());
-                            break;
-                        case "Right":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_Right.png")).getImage());
-                            break;
-                        case "DownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_LeftDown.png")).getImage());
-                            break;
-                        case "Down":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_Down.png")).getImage());
-                            break;
-                        case "Left":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_Left.png")).getImage());
-                            break;
-                        default:
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Medium/Tiles/Tile_None.png")).getImage());
-                            break;
-                    }
-                } else if (difficulty == 3) {
-                    switch (tileToDraw) {
-                        case "All":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_All.png")).getImage());
-                            break;
-                        case "UpRightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_UpDownRight.png")).getImage());
-                            break;
-                        case "UpRightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_LeftRightUp.png")).getImage());
-                            break;
-                        case "UpRight":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_RightUp.png")).getImage());
-                            break;
-                        case "Up":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_Up.png")).getImage());
-                            break;
-                        case "UpDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_UpDownLeft.png")).getImage());
-                            break;
-                        case "UpDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_UpDown.png")).getImage());
-                            break;
-                        case "UpLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_LeftUp.png")).getImage());
-                            break;
-                        case "RightDownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_LeftRightDown.png")).getImage());
-                            break;
-                        case "RightDown":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_RightDown.png")).getImage());
-                            break;
-                        case "RightLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_LeftRight.png")).getImage());
-                            break;
-                        case "Right":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_Right.png")).getImage());
-                            break;
-                        case "DownLeft":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_LeftDown.png")).getImage());
-                            break;
-                        case "Down":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_Down.png")).getImage());
-                            break;
-                        case "Left":
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_Left.png")).getImage());
-                            break;
-                        default:
-                            currTile.setTile(new ImageIcon(this.getClass().getResource("/images/Hard/Tiles/Tile_None.png")).getImage());
-                            break;
-                    }
+                switch (tileToDraw) {
+                    case "All":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_All.png")).getImage());
+                        break;
+                    case "UpRightDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_UpDownRight.png")).getImage());
+                        break;
+                    case "UpRightLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_LeftRightUp.png")).getImage());
+                        break;
+                    case "UpRight":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_RightUp.png")).getImage());
+                        break;
+                    case "Up":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_Up.png")).getImage());
+                        break;
+                    case "UpDownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_UpDownLeft.png")).getImage());
+                        break;
+                    case "UpDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_UpDown.png")).getImage());
+                        break;
+                    case "UpLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_LeftUp.png")).getImage());
+                        break;
+                    case "RightDownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_LeftRightDown.png")).getImage());
+                        break;
+                    case "RightDown":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_RightDown.png")).getImage());
+                        break;
+                    case "RightLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_LeftRight.png")).getImage());
+                        break;
+                    case "Right":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_Right.png")).getImage());
+                        break;
+                    case "DownLeft":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_LeftDown.png")).getImage());
+                        break;
+                    case "Down":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_Down.png")).getImage());
+                        break;
+                    case "Left":
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_Left.png")).getImage());
+                        break;
+                    default:
+                        currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_None.png")).getImage());
+                        break;
                 }
+
                 //If it's not start/end point, draw the tile
                 if (!currTile.isStartPoint() && !currTile.isEndPoint()) {
                     g2d.drawImage(currTile.getTile(), x1, y1, null);
@@ -342,78 +173,116 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 y1 -= tileSize;
             }
         }
-        
+    }
+
+    /**
+     * Method to draw the player
+     * @param g
+     */
+    public void drawPlayer(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+
+        upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_1.png")).getImage();
+        upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_2.png")).getImage();
+
+        downPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Forwards_1.png")).getImage();
+        downPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Forwards_2.png")).getImage();
+
+        rightPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Right_1.png")).getImage();
+        rightPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Right_2.png")).getImage();
+
+        leftPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Left_1.png")).getImage();
+        leftPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Left_2.png")).getImage();
+
+        stayingPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Still.png")).getImage();
+
         Player player = game.getPlayer();
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
         int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
-        //System.out.println("Working Directory = " + System.getProperty("user.dir"));  
-        Image img[] = null; 
+        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        Image img[] = null;
         //g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
         if (player.getDirection() == Player.UP){
-        	img  = upPlayerImages;
+            img  = upPlayerImages;
         }else if (player.getDirection() == Player.DOWN){
-        	img  = downPlayerImages;
+            img  = downPlayerImages;
         }else if (player.getDirection() == Player.LEFT){
-        	img  = leftPlayerImages;
+            img  = leftPlayerImages;
         }else if (player.getDirection() == Player.RIGHT){
-        	img  = rightPlayerImages;
+            img  = rightPlayerImages;
         }else if (player.getDirection() == Player.NONE){
-        	img  = stayingPlayerImages;
+            img  = stayingPlayerImages;
         }
-   
+
         subImageRotation++;
-        
+
         if (subImageRotation == GUI.ticksPerImageRotation){
-        	this.imageRotation = (this.imageRotation+1)%img.length;
-        	subImageRotation = 0;
+            this.imageRotation = (this.imageRotation+1)%img.length;
+            subImageRotation = 0;
         }
-        
+
         if (img.length == 1){
-        	imageRotation = 0;
+            imageRotation = 0;
         }
 
         g2d.drawImage(img[imageRotation], playerDisplayX, playerDisplayY, null);
-        
+    }
+
+    /**
+     * Method to draw fog around the player
+     * @param g
+     */
+    public void drawBoardFog(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        Player player = game.getPlayer();
+        int playerSize = (int) (tileSize*game.getPlayerSize()+1);
+        int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
+        int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
+
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
-        
-        if (game.getState() == game.LOST) { 
-        	//Make the game screen fade to black
-    		diameter -= 80;
-    		//Change the timer text
-    		this.timerLbl.setText("TIME IS UP!!!");
+
+        if (game.getState() == game.LOST) {
+            //Make the game screen fade to black
+            diameter -= 80;
+            //Change the timer text
+            this.timerLbl.setText("TIME IS UP!!!");
             //Store the end time once only
-    		if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
-    			this.endTime = Math.abs(game.getTime());  
-    		}
-    		System.out.println(this.endTime + " " + Math.abs(game.getTime()));
-    		//Game waits 450ms for the fog to cover the screen before going to the lose screen
-    		if(Math.abs(game.getTime())- this.endTime >= 450){
-    			actionTimer.stop();
-    			JButton exit = new JButton();
-    			JLabel loseLabel = new JLabel();
-    		    Image loseImage  = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
-    			exit = new JButton("Return To Main Menu");
-    			exit.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-    			exit.setBounds(583, 350, 300, 150);
-    			loseLabel.setIcon(new ImageIcon(loseImage));
-    			loseLabel.add(exit);
-				frame.getContentPane().removeAll();
-			    frame.getContentPane().add(loseLabel);
-				frame.revalidate();
-				
+            if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
+                this.endTime = Math.abs(game.getTime());
+            }
+            System.out.println(this.endTime + " " + Math.abs(game.getTime()));
+            //Game waits 450ms for the fog to cover the screen before going to the lose screen
+            if(Math.abs(game.getTime())- this.endTime >= 450){
+                actionTimer.stop();
+                JButton exit = new JButton();
+                JLabel loseLabel = new JLabel();
+                Image loseImage  = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
+                exit = new JButton("Return To Main Menu");
+                exit.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
+                exit.setBounds(583, 350, 300, 150);
+                loseLabel.setIcon(new ImageIcon(loseImage));
+                loseLabel.add(exit);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().add(loseLabel);
+                frame.revalidate();
+
                 //Adds a button to go back to menu
-    			exit.addActionListener(new ActionListener() {
-    				public void actionPerformed(ActionEvent e) {
-    					MenuLabel menu = new MenuLabel(frame);
-    					menu.setVisible(true);	
-    					frame.getContentPane().removeAll();
-    				    frame.getContentPane().add(menu);
-    					frame.revalidate();
-    				}
-    			});
-    			
+                exit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        MenuLabel menu = new MenuLabel(frame);
+                        menu.setVisible(true);
+                        frame.getContentPane().removeAll();
+                        frame.getContentPane().add(menu);
+                        frame.revalidate();
+                    }
+                });
+
     		    /*
         	    Font end = new Font("Copperplate Gothic Light", Font.BOLD, 30);
         	    g.setFont(end);
@@ -421,20 +290,83 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         	    g.drawString("Time has run out. You have to live among other hobos", 236, 200);
         	   */
                 //actionTimer.stop();
-    		}
-    		
+            }
+
         } else if (game.getState() == game.WON){
-        	
-    		
+
+
         } else if (game.getState() == game.PLAYING) {
-        	if (diameter != 4000) {
-            	diameter += 25;
-        	}
+            if (diameter != 4000) {
+                diameter += 25;
+            }
         }
-       
+
         drawFog(xCentre, yCentre, diameter, g2d);
-        
-    
+
+
+    }
+
+    /**
+     * Method to checks where the walls are in a tile
+     * @param currTile current tile
+     * @return a String of where the walls at
+     */
+    public String wallChecks(Tiles currTile) {
+        String tileToDraw = "";
+
+        //All walls check (Start from North)
+        if (currTile.isWall(Tiles.NORTH)) {
+            tileToDraw = "Up";
+            if (currTile.isWall(Tiles.EAST)) {
+                tileToDraw = "UpRight";
+                if (currTile.isWall(Tiles.SOUTH)) {
+                    tileToDraw = "UpRightDown";
+                    if (currTile.isWall(Tiles.WEST)) {
+                        tileToDraw = "All";
+                    }
+                    //North, East and West
+                } else if (currTile.isWall(Tiles.WEST)) {
+                    tileToDraw = "UpRightLeft";
+                }
+                //North, South and West
+            } else if (currTile.isWall(Tiles.SOUTH)) {
+                tileToDraw = "UpDown";
+                if (currTile.isWall(Tiles.WEST)) {
+                    tileToDraw = "UpDownLeft";
+                }
+                //North and West
+            } else if (currTile.isWall(Tiles.WEST)) {
+                tileToDraw = "UpLeft";
+            }
+        //East wall
+        } else if (currTile.isWall(Tiles.EAST)) {
+            tileToDraw = "Right";
+            //East and South
+            if (currTile.isWall(Tiles.SOUTH)) {
+                tileToDraw = "RightDown";
+                //East, South and West
+                if (currTile.isWall(Tiles.WEST)) {
+                    tileToDraw  = "RightDownLeft";
+                }
+                //East and West
+            } else if (currTile.isWall(Tiles.WEST)) {
+                tileToDraw = "RightLeft";
+            }
+
+        }
+        //South wall
+        else if (currTile.isWall(Tiles.SOUTH)) {
+            tileToDraw = "Down";
+            //South and West
+            if (currTile.isWall(Tiles.WEST)) {
+                tileToDraw = "DownLeft";
+            }
+        }
+        //West wall
+        else if (currTile.isWall(Tiles.WEST)) {
+            tileToDraw = "Left";
+        }
+        return tileToDraw;
     }
 
     @Override
@@ -443,6 +375,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         tickTime();
         g.drawImage(img, 0, 0, this);
         drawBoard(g);
+        drawPlayer(g);
+        drawBoardFog(g);
     }
 
     @Override
@@ -534,7 +468,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	JLabel endGame = new JLabel();
         Image img2;
         endGame.setText("");
-		img2 = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+		img2 = new ImageIcon(this.getClass().getResource("/image/wallpaper3.png")).getImage();
 		endGame.setIcon(new ImageIcon(img2));
 		
 		endGame.setVisible(true);
