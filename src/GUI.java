@@ -46,10 +46,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private JTextArea totalScore;
     private int endTime;
     
-    
-
     private JFrame frame;
-    
     
 
     public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame){
@@ -57,7 +54,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
-        this.diameter=0;
         this.difficulty = difficulty;
         this.addKeyListener(this);
         this.setFocusable(true);
@@ -248,8 +244,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int yCentre = playerDisplayY + playerSize/2;
 
         if (game.getState() == game.LOST) {
-            //Make the game screen fade to black
-            diameter -= 80;
             //Change the timer text
             this.timerLbl.setText("TIME IS UP!!!");
             //Store the end time once only
@@ -259,6 +253,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             System.out.println(this.endTime + " " + Math.abs(game.getTime()));
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(game.getTime())- this.endTime >= 450){
+            	g.clearRect(0, 0, 9999, 9999);
                 actionTimer.stop();
                 JButton exit = new JButton();
                 JLabel loseLabel = new JLabel();
@@ -271,7 +266,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 frame.getContentPane().removeAll();
                 frame.getContentPane().add(loseLabel);
                 frame.revalidate();
-
+                
                 //Adds a button to go back to menu
                 exit.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -296,11 +291,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
 
         } else if (game.getState() == game.PLAYING) {
-            if (diameter != 4000) {
-                diameter += 25;
-            }
+            
         }
-
+        
+        int diameter = game.getVisionRange() * tileSize;
         drawFog(xCentre, yCentre, diameter, g2d);
 
 
@@ -374,9 +368,14 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         super.paintComponent(g);
         tickTime();
         g.drawImage(img, 0, 0, this);
-        drawBoard(g);
-        drawPlayer(g);
-        drawBoardFog(g);
+        if (game.getState() == game.PAUSED){
+        	drawPlayer(g);
+        	drawBoardFog(g);
+        }else{
+	        drawBoard(g);
+	        drawPlayer(g);
+	        drawBoardFog(g);
+        }
     }
 
     @Override
@@ -446,6 +445,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				actionTimer.stop();
+				int oldState = game.getState();
+				game.setState(Game.PAUSED);
 			    String message = "Are you sure you wish to exit to main menu?";
 			    int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
 			    if(answer == JOptionPane.YES_NO_OPTION) {
@@ -455,6 +456,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 					frame.getContentPane().add(menu);
 				    frame.revalidate();
 			    } else if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION){
+			    	game.setState(oldState);
 			    	//continue the game
 			        actionTimer.start();
 			        exitMainMenu.getContentPane().removeAll();
