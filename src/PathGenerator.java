@@ -11,7 +11,7 @@ public class PathGenerator {
 	
 	private final static int[] dirX = new int[]{0, 1, 0, -1};
 	private final static int[] dirY = new int[]{1, 0, -1, 0};
-	private final static int powerUpRatio = 8;
+	private final static int powerUpRatio = 5;
 	private final static int extraWallRatio = 15;
 	
 	private boolean[][] seen;

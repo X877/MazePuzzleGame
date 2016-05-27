@@ -4,6 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Stack;
 
 
@@ -17,7 +23,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int posFromBottom;
     private int posFromLeft;
     private int counter;
-    public static final int tickTime = 50;
+    public static final int tickTime = 40;
 	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
@@ -33,7 +39,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	
 	private Stack<Character> keysPressed;
 	private Game game;
-    private Timer tickTimer;
+    private Timer actionTimer;
     private JFrame exitMainMenu;
 
     private JToggleButton hint;
@@ -41,24 +47,24 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private JButton btnBackToMenu;
     private JLabel fadeLoseLbl;
     private Timer fadeTimer;
-    private JTextArea levelScore;
-    private JTextArea totalScore;
     private int endTime;
-    private boolean focusRequested = false;
-    
+    private int prevScores;
+    private boolean focusRequested;
+    private int difficulty;
+   
     private JFrame frame;
     
 
-    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame){
+    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame, int prevScores){
 
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
         this.addKeyListener(this);
         this.setFocusable(true);
-        this.tickTimer = new Timer(tickTime, this);
-        this.tickTimer.start();
-
+        this.actionTimer = new Timer(tickTime, this);
+        this.actionTimer.start();
+        this.prevScores = prevScores;
         this.upPlayerImages = new Image[2];
         this.downPlayerImages = new Image[2];
         this.leftPlayerImages = new Image[2];
@@ -66,6 +72,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.stayingPlayerImages = new Image[1];
         this.endTime = 0;
         this.frame = frame;
+        this.focusRequested = false;
+        this.difficulty = difficulty;
         this.game = new Game(mazeBoard,(double)16/this.tileSize);
 
         keysPressed = new Stack<Character>();
@@ -85,7 +93,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.img = new ImageIcon(this.getClass().getResource("/images/" + level + "/background.png")).getImage();
 
         this.count = "";
-
         addTimerLbl();
         addHintBtn();
         addBackToMenuBtn(frame);
@@ -166,12 +173,12 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     /**
      * Method to draw the player
-     * @param g Graphics to draw the player on
+     * @param g
      */
     public void drawPlayer(Graphics g) {
 
-    	// Loads all the player sprites
         Graphics2D g2d = (Graphics2D) g;
+
 
         upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_1.png")).getImage();
         upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_2.png")).getImage();
@@ -188,13 +195,12 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         stayingPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Still.png")).getImage();
 
         Player player = game.getPlayer();
-        // Finds the coordinate to draw the player at
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
         int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
-        
+        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
         Image img[] = null;
-        // Decides which image set to display based on player diretion
+        //g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
         if (player.getDirection() == Player.UP){
             img  = upPlayerImages;
         }else if (player.getDirection() == Player.DOWN){
@@ -208,7 +214,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         }
 
         subImageRotation++;
-        // Every certain amount of ticks, change the player sprite to the next one in the set
+
         if (subImageRotation == GUI.ticksPerImageRotation){
             this.imageRotation = (this.imageRotation+1)%img.length;
             subImageRotation = 0;
@@ -217,20 +223,18 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         if (img.length == 1){
             imageRotation = 0;
         }
-        
-        // Draw the image
+
         g2d.drawImage(img[imageRotation], playerDisplayX, playerDisplayY, null);
     }
 
     /**
      * Method to draw fog around the player
-     * @param g Graphics to draw around
+     * @param g
      */
     public void drawTransition(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-        
-        // Find the centre of the fog to draw upon
+
         Player player = game.getPlayer();
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
@@ -239,9 +243,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         int xCentre = playerDisplayX + playerSize/2;
         int yCentre = playerDisplayY + playerSize/2;
 
-        // Move this code, it shouldn't be here. 
-        // Probably place in GUI.tick or in a seperate function called say gameCheckFinished
-        if (game.getState() == Game.LOST) {
+        if (game.getState() == game.LOST) {
             //Change the timer text
             this.timerLbl.setText("TIME IS UP!!!");
             //Store the end time once only
@@ -252,7 +254,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(game.getTime())- this.endTime >= 650){
             	g.clearRect(0, 0, 9999, 9999);
-                tickTimer.stop();
+                actionTimer.stop();
                 JButton exit = new JButton();
                 JLabel loseLabel = new JLabel();
                 Image loseImage  = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
@@ -264,7 +266,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 frame.getContentPane().removeAll();
                 frame.getContentPane().add(loseLabel);
                 frame.revalidate();
-                
+         
                 //Adds a button to go back to menu
                 exit.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -275,19 +277,39 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                         frame.revalidate();
                     }
                 });
-
             }
 
-        } else if (game.getState() == Game.WON){
-
-
-        } else if (game.getState() == Game.PLAYING) {
+        } else if (game.getState() == game.WON){
+        	 //Change the timer text
+            this.timerLbl.setText("You Won!!");
+            //Store the end time once only
+            if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
+                this.endTime = Math.abs(game.getTime());
+            }
+            //System.out.println(game.getTime() + " " + this.endTime);
+            //Game waits 450ms for the fog to cover the screen before going to the lose screen
+            if(Math.abs(Math.abs(game.getTime())- this.endTime) >= 450){
+            	g.clearRect(0, 0, 9999, 9999);
+                actionTimer.stop();
+                if(difficulty == 4){
+                	checkScore();
+                }
+                System.out.println("ENTERING HERE!");
+                JLabel transitionLabel = new TransitionLevelLabel(this.difficulty + 1, frame, endTime, prevScores);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().add(transitionLabel);
+                frame.revalidate();
+            }
+  
+        } else if (game.getState() == game.PLAYING) {
             
         }
         
         int diameter = game.getVisionRange() * tileSize;
         drawFog(xCentre, yCentre, diameter, g2d);
     }
+
+ 
 
     /**
      * Method to checks where the walls are in a tile
@@ -319,7 +341,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         super.paintComponent(g);
         tickTime();
         g.drawImage(img, 0, 0, this);
-        if (game.getState() == Game.PAUSED){
+        if (game.getState() == game.PAUSED){
         	drawPlayer(g);
         	drawTransition(g);
         }else{
@@ -342,19 +364,14 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         repaint();
     }
 
-    
     @Override
-    /**
-     * Adds key pressed to key pressed list
-     */
     public void keyPressed(KeyEvent e) {
     	if (!keysPressed.contains(e.getKeyChar())){
+    		//System.out.println(ADDING" + keysPressed);
     		keysPressed.add(e.getKeyChar());
     	}
     }
-    /**
-     * Removes key released from key pressed list
-     */
+
     @Override
     public void keyReleased(KeyEvent e) {
     	keysPressed.remove((Object) e.getKeyChar());
@@ -362,17 +379,10 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void keyTyped(KeyEvent arg0) {
+        // TODO Auto-generated method stub
     }
     
-    /**
-     * Draw fog of diameter around the coordinates
-     * @param xCentre 	X the fog centers around
-     * @param yCentre 	Y the fog centers around
-     * @param diameter 	Diameter of the fog in px
-     * @param g2d		Graphics to draw the fog
-     */
     private void drawFog(int xCentre, int yCentre, int diameter, Graphics2D g2d){
-    	// Creates a square around the playing field and subtracts the specified circle from that square
     	g2d.setColor(Color.BLACK);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
         	      RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
@@ -435,27 +445,27 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 		
         //If the button is pressed open up the window option and pause the game
 		btnBackToMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                tickTimer.stop();
-                int oldState = game.getState();
-                game.setState(Game.PAUSED);
-                String message = "Are you sure you wish to exit to main menu?";
-                int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
-                if (answer == JOptionPane.YES_NO_OPTION) {
-                    MenuLabel menu = new MenuLabel(frame);
-                    menu.setVisible(true);
-                    frame.getContentPane().removeAll();
-                    frame.getContentPane().add(menu);
-                    frame.revalidate();
-                } else if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION) {
-                    game.setState(oldState);
-                    //continue the game
-                    tickTimer.start();
-                    exitMainMenu.getContentPane().removeAll();
-                    exitMainMenu.revalidate();
-                }
-            }
-        });
+			public void actionPerformed(ActionEvent e) {
+				actionTimer.stop();
+				int oldState = game.getState();
+				game.setState(Game.PAUSED);
+			    String message = "Are you sure you wish to exit to main menu?";
+			    int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
+			    if(answer == JOptionPane.YES_NO_OPTION) {
+			        MenuLabel menu = new MenuLabel(frame);
+					menu.setVisible(true);	
+					frame.getContentPane().removeAll();
+					frame.getContentPane().add(menu);
+				    frame.revalidate();
+			    } else if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION){
+			    	game.setState(oldState);
+			    	//continue the game
+			        actionTimer.start();
+			        exitMainMenu.getContentPane().removeAll();
+					exitMainMenu.revalidate();	
+			    } 
+			}
+		});
 	}
 
     
@@ -474,5 +484,73 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	    frame.revalidate();
     }
     
+    public void addLevelHighScore(){
+    	
+    }
+    public void addTotalHighScore(){
+    	
+    }
+    
+    //if endTime + prevTime > checkScore()
+    public void checkScore(){
+    	String strOldScore = getHighScore();
+    	int intOldScore = Integer.parseInt((strOldScore.split(":")[1]));
+    	int newScore = endTime + prevScores;
+    	if (endTime + prevScores  > intOldScore){
+		    String name = JOptionPane.showInputDialog("You set a new highscore! What is your name?");
+	        String highScore = name + ":" + newScore;
+	        File scoreFile = new File("highscore.dat");
+	        //does not exist
+	        if(!scoreFile.exists()){
+	    	    try {
+	    	        scoreFile.createNewFile();
+	    	    } catch(IOException e){
+	        	    e.printStackTrace();
+	            }
+	        }
+
+	        FileWriter writeFile = null;
+	        BufferedWriter writer = null;
+	        try{
+	    	    writeFile = new FileWriter(scoreFile);
+	    	    writer = new BufferedWriter(writeFile);
+	    	    writer.write(highScore);
+	        } catch (Exception e){
+	    	    //errors if not found
+	        } finally {
+	    	    try{
+	    	        if (writer != null){
+	    		        writer.close();
+	    	        }
+	    	    } catch (Exception e){
+	    	    }
+	        }
+    	}
+	        
+	}
+    
+	public String getHighScore(){
+		//Format: Name:score
+		FileReader readFile = null;
+		BufferedReader reader = null;
+		try{
+		    readFile = new FileReader("highscore.dat");
+		     reader = new BufferedReader(readFile);
+		    //Returns the score as a string
+		    return reader.readLine();
+		} catch (Exception e){
+			//No name or high score so return 0
+			return "Nobody:0";
+		} finally{
+			try {
+				//Close the reader if it is not null
+				if(reader != null){
+					reader.close();	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
 
