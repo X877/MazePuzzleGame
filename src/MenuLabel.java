@@ -23,7 +23,7 @@ public class MenuLabel extends JLabel {
 	MenuLabel(final JFrame frame){
 		this.setText("");
 		this.setBounds(0, 0, 1376, 768);
-		img = new ImageIcon(this.getClass().getResource("/images/wallpaper2.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/images/Menus/Main.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addPlayButton(frame);
 		addHighScoresButton(frame);
@@ -42,7 +42,7 @@ public class MenuLabel extends JLabel {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
 				//Create a new board
-				LevelGenerator gennie = new LevelGenerator(2);
+				LevelGenerator gennie = new LevelGenerator(1);
 				GUI easy = gennie.levelGen(frame);
 
 				frame.getContentPane().add(easy);

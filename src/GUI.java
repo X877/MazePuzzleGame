@@ -20,7 +20,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private int posFromBottom;
     private int posFromLeft;
     private int counter;
-    public static final int tickTime = 40;
+    public static final int tickTime = 50;
 	private static final int ticksPerImageRotation = 8;
 	private int subImageRotation = 0;
 	private int imageRotation = 0;
@@ -45,6 +45,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private JTextArea levelScore;
     private JTextArea totalScore;
     private int endTime;
+    private boolean focusRequested = false;
     
     private JFrame frame;
     
@@ -329,7 +330,13 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	this.requestFocus();
+    	Player player = game.getPlayer();
+    	game.getBoard().showHint((int) player.getX(),(int) player.getY());
+    	
+    	if (!focusRequested){
+    		this.requestFocus();
+    		focusRequested = true;
+    	}
     	game.tick();
     	game.movePlayer(keysPressed);
         repaint();

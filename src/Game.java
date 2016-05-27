@@ -25,13 +25,14 @@ public class Game {
 	private Board board;
 	private Player player;
 	private double playerSize;
-	
+	private Random rand;
 	public Game(Board board,double playerSize){
+		rand = new Random();
 		this.visionBufferTime = 0;
 		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
-		time = 100*100;
+		time = 1000*100;
 		state = PLAYING;
 		visionRange = 0;
 	}
@@ -98,17 +99,13 @@ public class Game {
 		if (coffeeSpeedupTime < 0){
 			coffeeSpeedupTime = 0;
 		}
-		if (coffeeSpeedupTime > 0){
-			MovementPerTick = 0.3;
-		}else{
-			MovementPerTick = 0.15;
-		}
 		
 		
 		if (state == PLAYING){
 			if (visionBufferTime == 0){
 				if (visionRange < MAX_VISION_RANGE) {
 		            visionRange += 1;
+		            System.out.println("Vision range "+ visionRange);
 		        }
 			}
 		}
@@ -154,22 +151,42 @@ public class Game {
 		if (keysPressed.contains('d')){
 			dx += MovementPerTick;
 		}
-		Random rand = new Random();
-		if (beerStumbleTime > 0){
-			dy += rand.nextDouble()%(MovementPerTick/0.6)*(double) beerStumbleTime/this.INITIAL_BEER_STUMBLE_TIME;
-			dx += rand.nextDouble()%(MovementPerTick/0.6)*(double) beerStumbleTime/this.INITIAL_BEER_STUMBLE_TIME;
-		}
 		
-		if (coffeeSpeedupTime > 0){
+		
+		if (beerStumbleTime > 0){
+			System.out.println("Stumble time " + beerStumbleTime);
+			dx /= 2;
+			dy /= 2;
 			if (rand.nextInt(4) == 0){
-				dy = rand.nextDouble()%(MovementPerTick);
-				dx = rand.nextDouble()%(MovementPerTick);
+				dy += rand.nextDouble()%(MovementPerTick)*(double) beerStumbleTime/Game.INITIAL_BEER_STUMBLE_TIME;
+				dx += rand.nextDouble()%(MovementPerTick)*(double) beerStumbleTime/Game.INITIAL_BEER_STUMBLE_TIME;
+			}
+			if (rand.nextInt(6) == 0){
+				dy *= -1;
+				dx *= -1;
 			}
 		}
 		
+		if (coffeeSpeedupTime > 0){
+			dy *= 2;
+			dx *= 2;
+			if (rand.nextInt(8) == 0){
+				dy = rand.nextDouble()%(MovementPerTick*2);
+				dx = rand.nextDouble()%(MovementPerTick*2);
+			}
+		}
+		
+		dx = roundDouble(dx);
+		dy = roundDouble(dy);
+		
+		if (dx > 1){
+			System.out.println(dx +" " + dy);
+		}
+		if (dy > 1){
+			System.out.println(dx +" " + dy);
+		}
+		
 		player.setDirection(Player.NONE);
-		//dx = roundDouble(dx);
-		//dy = roundDouble(dy);
 		if (xFirst){
 			boolean xMoved = moveX(dx);
 			if (!xMoved){
@@ -187,6 +204,7 @@ public class Game {
 		double x = player.getX();
 		double y = player.getY();
 		
+		
 		int rightX = (int) roundDouble(x + playerSize);
 		int leftX = (int) roundDouble(x);
 		int topY = (int) roundDouble(y);
@@ -199,8 +217,8 @@ public class Game {
 			return;
 		}
 
-		if (currentTile.getState() != Tiles.EMPTY) {
-			if (currentTile.getState() == Tiles.BEER){
+		if (currentTile.getState()!= Tiles.EMPTY || currentTile2.getState() != Tiles.EMPTY) {
+			if (currentTile.getState() == Tiles.BEER || currentTile2.getState() == Tiles.BEER){
 				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
 				beerStumbleTime = Game.INITIAL_BEER_STUMBLE_TIME;
 				if (visionRange > BEER_VISION_RANGE){
@@ -208,40 +226,29 @@ public class Game {
 				}else{
 					visionRange -= 5;
 				}
+				System.out.println(visionRange);
+				if (visionRange <= 0){
+					x += (rand.nextInt(10)-5);
+					y += (rand.nextInt(10)-5);
+					x = Math.max(0,x);
+					y = Math.max(0,x);
+					x = Math.min(x,board.getWidth()-1);
+					y = Math.min(y,board.getHeight()-1);
+					player.setXY(x, y);
+				}
 			}
-			if (currentTile.getState() == Tiles.BOOK){
+			if (currentTile.getState() == Tiles.BOOK || currentTile2.getState() == Tiles.BOOK){
 				time += BOOK_TIME_BONUS;
 			}
-			if (currentTile.getState() == Tiles.COFFEE){
+			if (currentTile.getState() == Tiles.COFFEE || currentTile2.getState() == Tiles.COFFEE){
 				coffeeSpeedupTime = Game.INITIAL_COFFEE_SPEEDUP_TIME;
 			}
 			currentTile.setState(Tiles.EMPTY);
-		}
-		
-		if (currentTile2.getState() != Tiles.EMPTY) {
-			if (currentTile2.getState() == Tiles.BEER){
-				beerStumbleTime = Game.INITIAL_BEER_STUMBLE_TIME;
-				visionBufferTime = Game.INITIAL_VISION_BUFFER_TIME;
-				if (visionRange > BEER_VISION_RANGE){
-					visionRange = BEER_VISION_RANGE;
-				}else{
-					visionRange -= 5;
-				}
-			}
-			if (currentTile2.getState() == Tiles.BOOK){
-				time += BOOK_TIME_BONUS;
-			}
-			if (currentTile2.getState() == Tiles.COFFEE){
-				coffeeSpeedupTime = Game.INITIAL_COFFEE_SPEEDUP_TIME;
-			}
 			currentTile2.setState(Tiles.EMPTY);
 		}
-
-
-		//System.out.println(x
-		//		+" "+ y);
-		// Many code
+		
 	}
+	
 	
 	public boolean moveX(double dx){
 		double x = player.getX();
@@ -364,7 +371,6 @@ public class Game {
 	}
 	
 	double roundDouble(double x){
-		
 		return (double) Math.round(x * 100)/100;
 	}
 	
