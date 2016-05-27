@@ -9,6 +9,11 @@ public class Board {
     private int height;
     private int width;
 
+    /**
+     * Constructor of Board class
+     * @param height height of the board
+     * @param width width of the board
+     */
     public Board(int height, int width) {
         columns = new ArrayList<ArrayList<Tiles>>();
         this.height = height;
@@ -60,27 +65,20 @@ public class Board {
     public int getHeight() {
         return height;
     }
-    
-    public void setHeight(int height) {
-        this.height = height;
-    }
+
     
     public int getWidth() {
         return width;
     }
-    
-    public void setWidth(int width) {
-        this.width = width;
-    }
+
 
     public ArrayList<ArrayList<Tiles>> getColumns() {
         return columns;
     }
 
-    public void setColumns(ArrayList<ArrayList<Tiles>> columns) {
-        this.columns = columns;
-    }
-
+    /**
+     * Method to remove hint from a tile
+     */
 	public void removeHint(){
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
@@ -89,7 +87,12 @@ public class Board {
 			}
 		}
 	}
-	
+
+    /**
+     * Method to show hint on a tile
+     * @param playerX player coordinate X
+     * @param playerY player coordinate Y
+     */
 	public void showHint(int playerX, int playerY){
 		removeHint();
 		Tiles curTile = getTile(playerX, playerY).getNextTile();
