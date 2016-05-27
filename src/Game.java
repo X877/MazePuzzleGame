@@ -143,12 +143,12 @@ public class Game {
 			dx /= BEER_STUMBLE_SPEEDDOWN;
 			dy /= BEER_STUMBLE_SPEEDDOWN;
 			// Chance of random beer stumbling
-			if (rand.nextInt(4) == 0){
+			if (rand.nextInt(6) == 0){
 				dy += rand.nextDouble()%(movementPerTick)*(double) beerStumbleTime/Game.INITIAL_BEER_STUMBLE_TIME;
 				dx += rand.nextDouble()%(movementPerTick)*(double) beerStumbleTime/Game.INITIAL_BEER_STUMBLE_TIME;
 			}
 			// Chance of random beer opposite disorientation
-			if (rand.nextInt(6) == 0){
+			if (rand.nextInt(8) == 0){
 				dy *= -1;
 				dx *= -1;
 			}

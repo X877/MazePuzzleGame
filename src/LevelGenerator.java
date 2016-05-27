@@ -36,25 +36,25 @@ public class LevelGenerator {
                 Board easyBoard = new Board(16, 36);
                 path = new PathGenerator(easyBoard);
                 path.genMaze();
-                maze = new GUI(easyBoard, 27, 607, 135, 1, frame, prevScores);
+                maze = new GUI(easyBoard, 27, 19, 607, 135, 1, frame, prevScores);
                 return maze;
             case 2:
                 Board medBoard = new Board(20, 36);
                 path = new PathGenerator(medBoard);
                 path.genMaze();
-                maze = new GUI(medBoard, 27, 720, 108, 2, frame, prevScores);
+                maze = new GUI(medBoard, 27, 19, 720, 108, 2, frame, prevScores);
                 return maze;
             case 3:
                 Board hardBoard = new Board(30, 45);
                 path = new PathGenerator(hardBoard);
                 path.genMaze();
-                maze = new GUI(hardBoard, 22, 715, 135, 3, frame, prevScores);
+                maze = new GUI(hardBoard, 22, 16, 715, 135, 3, frame, prevScores);
                 return maze;
             case 4:
                 Board expertBoard = new Board(30, 45);
                 path = new PathGenerator(expertBoard);
                 path.genMaze();
-                maze = new GUI(expertBoard, 22, 715, 112, 4, frame, prevScores);
+                maze = new GUI(expertBoard, 22, 16, 715, 112, 4, frame, prevScores);
                 return maze;
 
         }

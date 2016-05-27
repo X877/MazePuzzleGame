@@ -55,7 +55,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     private JFrame frame;
     
 
-    public GUI(Board mazeBoard, int tileSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame, int prevScores){
+    public GUI(Board mazeBoard, int tileSize, int playerSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame, int prevScores){
 
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
@@ -199,7 +199,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         //Finds the coordinate to draw the player at
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
-        int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
+        int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize-playerSize);
         Image img[] = null;
         // Decides which image set to display based on player direction
         if (player.getDirection() == Player.UP){
