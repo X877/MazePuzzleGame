@@ -58,7 +58,6 @@ public class Tiles {
         this.startPoint = false;
         this.endPoint = false;
         this.state = EMPTY;
-        //this.tile = new ImageIcon(this.getClass().getResource("/Tile_All.png")).getImage();
     }
 
     /**
@@ -79,13 +78,6 @@ public class Tiles {
 		walls[wallDirection] = value;
 	}
 
-    public boolean isHasPlayer() {
-        return hasPlayer;
-    }
-
-    public void setHasPlayer(boolean hasPlayer) {
-        this.hasPlayer = hasPlayer;
-    }
 
     public boolean isStartPoint() {
         return startPoint;
