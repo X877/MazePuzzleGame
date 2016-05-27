@@ -42,12 +42,10 @@ public class TransitionLevelLabel extends JLabel {
         //Set the background
         this.setText("");
 		this.img = new ImageIcon(this.getClass().getResource("/images/transition" +  difficulty + ".png")).getImage();
-        System.out.println("Level number is:" + level);
 		this.setIcon(new ImageIcon(img));
 		//Add the button
 		
 		this.prevScores = prevScores;
-		System.out.println(prevScores);
 		//Add the level score text
 	   	txtLevelScore = new JTextArea();
 		txtLevelScore.setText("Level Score: " + Integer.toString(levelScore));
@@ -56,14 +54,12 @@ public class TransitionLevelLabel extends JLabel {
 		this.add(txtLevelScore);
 		
 		txtTotalScore = new JTextArea();
-		System.out.println(levelScore +" " + prevScores);
 		int totalScore = levelScore + prevScores;
 		prevScores = totalScore;
-		txtTotalScore.setText("Total Score: " + totalScore + " " + prevScores);
-		txtTotalScore.setBounds(583, 300, 700, 40);
+		txtTotalScore.setText("Total Score: " + totalScore );
+		txtTotalScore.setBounds(583, 300, 400, 40);
 		txtTotalScore.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
 		this.add(txtTotalScore);
-		System.out.println("prevScores rn is "  + prevScores);
 		if(difficulty != 5){
 		addNextLevelBtn(frame, prevScores);
 		}
@@ -88,7 +84,6 @@ public class TransitionLevelLabel extends JLabel {
 				frame.getContentPane().removeAll();
 				//Create a new board
 				LevelGenerator gennie = new LevelGenerator(Integer.parseInt(level));
-				System.out.println("PREVIOS SCORE BEING SENT IS" + score);
 				GUI nextLevel = gennie.levelGen(frame, score);
 				frame.getContentPane().add(nextLevel);
 				frame.setTitle("Don't be a HOBO - Stage " + level);

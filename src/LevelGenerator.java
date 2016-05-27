@@ -29,7 +29,6 @@ public class LevelGenerator {
     public GUI levelGen(final JFrame frame, int prevScores) {
         PathGenerator path;
         this.prevScores = prevScores;
-        System.out.println("LEVEL GEN PREV SCORES" + prevScores);
         GUI maze;
         switch (difficulty) {
             case 1:

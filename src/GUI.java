@@ -252,7 +252,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
                 this.endTime = Math.abs(game.getTime());
             }
-            //System.out.println(this.endTime + " " + Math.abs(game.getTime()));
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(game.getTime())- this.endTime >= 650){
             	g.clearRect(0, 0, 9999, 9999);
@@ -288,7 +287,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             if (Math.abs(game.getTime()) > 0 && this.endTime == 0){
                 this.endTime = Math.abs(game.getTime());
             }
-            //System.out.println(game.getTime() + " " + this.endTime);
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(Math.abs(game.getTime())- this.endTime) >= 450){
             	g.clearRect(0, 0, 9999, 9999);
@@ -296,7 +294,6 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 if(difficulty == 4){
                 	checkScore();
                 }
-                System.out.println("ENTERING HERE!");
                 JLabel transitionLabel = new TransitionLevelLabel(this.difficulty + 1, frame, endTime, prevScores);
                 frame.getContentPane().removeAll();
                 frame.getContentPane().add(transitionLabel);
