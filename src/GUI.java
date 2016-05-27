@@ -462,6 +462,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				actionTimer.stop();
 				int oldState = game.getState();
+				focusRequested = false;
 				game.setState(Game.PAUSED);
 			    String message = "Are you sure you wish to exit to main menu?";
 			    int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
