@@ -39,7 +39,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 	
 	private Stack<Character> keysPressed;
 	private Game game;
-    private Timer actionTimer;
+    private Timer tickTimer;
     private JFrame exitMainMenu;
 
     private JToggleButton hint;
@@ -62,8 +62,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.posFromLeft = posFromLeft;
         this.addKeyListener(this);
         this.setFocusable(true);
-        this.actionTimer = new Timer(tickTime, this);
-        this.actionTimer.start();
+        this.tickTimer = new Timer(tickTime, this);
+        this.tickTimer.start();
         this.prevScores = prevScores;
         this.upPlayerImages = new Image[2];
         this.downPlayerImages = new Image[2];
@@ -257,7 +257,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(game.getTime())- this.endTime >= 650){
             	g.clearRect(0, 0, 9999, 9999);
-                actionTimer.stop();
+                tickTimer.stop();
                 JButton exit = new JButton();
                 JLabel loseLabel = new JLabel();
                 Image loseImage  = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
@@ -293,7 +293,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
             if(Math.abs(Math.abs(game.getTime())- this.endTime) >= 450){
             	g.clearRect(0, 0, 9999, 9999);
-                actionTimer.stop();
+                tickTimer.stop();
                 if(difficulty == 4){
                 	checkScore();
                 }
@@ -345,8 +345,11 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         tickTime();
         g.drawImage(img, 0, 0, this);
         if (game.getState() == game.PAUSED){
+        	int range = game.getVisionRange();
+        	game.setVisionRange(0);
         	drawPlayer(g);
         	drawTransition(g);
+        	game.setVisionRange(range);
         }else{
 	        drawBoard(g);
 	        drawPlayer(g);
@@ -460,9 +463,11 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         //If the button is pressed open up the window option and pause the game
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				actionTimer.stop();
+				tickTimer.stop();
 				int oldState = game.getState();
 				focusRequested = false;
+				//drawFog(0,0,0);
+				repaint();
 				game.setState(Game.PAUSED);
 			    String message = "Are you sure you wish to exit to main menu?";
 			    int answer = JOptionPane.showConfirmDialog(exitMainMenu, message, message, JOptionPane.YES_NO_OPTION);
@@ -475,7 +480,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 			    } else if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION){
 			    	game.setState(oldState);
 			    	//continue the game
-			        actionTimer.start();
+			        tickTimer.start();
 			        exitMainMenu.getContentPane().removeAll();
 					exitMainMenu.revalidate();	
 			    } 

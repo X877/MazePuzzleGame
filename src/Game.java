@@ -17,7 +17,7 @@ public class Game {
 	private static final int BOOK_TIME_BONUS = 8000;
 	private static final int BEER_VISION_RANGE = 8;
 	private static final int MAX_VISION_RANGE = 110;
-	private static final int PLAYTIME = 1000;
+	private static final int PLAYTIME = 5;
 	private static final int PLAYING_ADDED_VISION_PER_TICK = 2;
 	private static final int LOST_LOST_VISION_PER_TICK = 2;
 	private static final int BEER_STUMBLE_SPEEDDOWN = 2;
@@ -44,7 +44,7 @@ public class Game {
 		this.playerSize = playerSize;
 		this.board = board;
 		player = new Player();
-		time = PLAYTIME*100;
+		time = PLAYTIME*1000;
 		state = PLAYING;
 		visionRange = 0;
 	}
@@ -435,5 +435,8 @@ public class Game {
 	
 	public double getPlayerSize(){
 		return playerSize;
+	}
+	public void setVisionRange(int range){
+		visionRange = range;
 	}
 }
