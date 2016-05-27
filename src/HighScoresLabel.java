@@ -70,7 +70,7 @@ public class HighScoresLabel extends JLabel {
 	public void setHighScore(){
 		txtHighScore1 = new JTextArea();
 		txtHighScore1.setText(getHighScore());
-		txtHighScore1.setBounds(583, 200, 200, 40);
+		txtHighScore1.setBounds(583, 380, 200, 40);
 		txtHighScore1.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
 		this.add(txtHighScore1);		
 	}
