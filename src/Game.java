@@ -16,7 +16,7 @@ public class Game {
 	private static final int INITIAL_COFFEE_SPEEDUP_TIME = 3000;
 	private static final int BOOK_TIME_BONUS = 8000;
 	private static final int BEER_VISION_RANGE = 8;
-	private static final int MAX_VISION_RANGE = 100;
+	private static final int MAX_VISION_RANGE = 110;
 	private static final int PLAYTIME = 1000;
 	private static final int PLAYING_ADDED_VISION_PER_TICK = 2;
 	private static final int LOST_LOST_VISION_PER_TICK = 2;
