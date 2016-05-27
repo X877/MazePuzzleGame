@@ -45,13 +45,10 @@ public class MenuLabel extends JLabel {
 				//Create a new board
 				LevelGenerator gennie = new LevelGenerator(1);
 				GUI easy = gennie.levelGen(frame, 0);
-
 				frame.getContentPane().add(easy);
 				frame.setTitle("Don't be a HOBO - Stage 1");
 				frame.setLocationRelativeTo(null);
-				frame.revalidate();
-
-				
+				frame.revalidate();	
 			}
 		});
       
@@ -65,7 +62,6 @@ public class MenuLabel extends JLabel {
 					frame.revalidate();
 
 					//Create a new board
-
 					LevelGenerator gennie = new LevelGenerator(1);
 					GUI easy = gennie.levelGen(frame, 0);
 
@@ -87,9 +83,8 @@ public class MenuLabel extends JLabel {
 			}
 		});
 	    
-	    
 		btnPlay.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-		btnPlay.setBounds(320, 370, 200, 50);
+		btnPlay.setBounds(384, 370, 200, 50);
 		this.add(btnPlay);
 	}
 	
@@ -110,7 +105,7 @@ public class MenuLabel extends JLabel {
 			}
 		});
 		btnHighScores.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-		btnHighScores.setBounds(580, 370, 200, 50);
+		btnHighScores.setBounds(644, 370, 200, 50);
 		this.add(btnHighScores);
 	}
 	
@@ -132,7 +127,7 @@ public class MenuLabel extends JLabel {
 					}
 				});
 				btnInstructions.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-				btnInstructions.setBounds(320, 460, 200, 50);
+				btnInstructions.setBounds(384, 460, 200, 50);
 				this.add(btnInstructions);
 
 	}
@@ -154,7 +149,7 @@ public class MenuLabel extends JLabel {
 			}
 		});
 		btnCredits.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-		btnCredits.setBounds(580 ,460, 200, 50);
+		btnCredits.setBounds(644 ,460, 200, 50);
 		this.add(btnCredits);
 	}
 
