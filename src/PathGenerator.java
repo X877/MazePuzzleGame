@@ -2,13 +2,16 @@ import java.util.Random;
 
 public class PathGenerator {
 	
+	private final static int[] dirX = new int[]{0, 1, 0, -1};
+	private final static int[] dirY = new int[]{1, 0, -1, 0};
+			
 	private boolean[][] seen;
 	private int width;
 	private int height;
 	private int bufferSpace;
 	private Board board;
 	private Random rand;
-
+	
 	public PathGenerator(Board startBoard){
 		board = startBoard;
 		width = board.getWidth();
@@ -20,6 +23,14 @@ public class PathGenerator {
 
 	private boolean isInBound(int curX, int curY){
 		return (curX >= bufferSpace && curY >= 0 && curX < width-bufferSpace && curY < height);
+	}
+	
+	private void resetSeen(){
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				seen[i][j] = false;
+			}
+		}
 	}
 	
 	private void dfs(int curX, int curY){
@@ -52,12 +63,7 @@ public class PathGenerator {
 	}
 	
 	private void addPowerUps(){
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < height; j++){
-				seen[i][j] = false;
-			}
-		}
-		
+		resetSeen();
 		//Tiles[][] prevTile = new Tiles[width][height];
 		int curX, curY; 
 		int numPowerUps = ((width-bufferSpace*2) * height)/5;
@@ -83,6 +89,7 @@ public class PathGenerator {
 		for(int i = 0; i < bufferSpace; i++){
 			for(int j = 0; j < height; j++){
 				Tiles curTile = board.getTile(i, j);
+				curTile.setNextTile(curTile);
 				for(int k = 0; k < 4; k++){
 					if(i == bufferSpace-1 && k == Tiles.EAST && j != 0){
 						continue;
@@ -91,8 +98,9 @@ public class PathGenerator {
 				}
 				
 				curTile = board.getTile((width-1)-i, j);
+				curTile.setNextTile(curTile);
 				for(int k = 0; k < 4; k++){
-					if(i == (width-bufferSpace) && k == Tiles.WEST && j != height-1){
+					if(i == bufferSpace-1 && k == Tiles.WEST && j != height-1){
 						continue;
 					}
 					curTile.setWall(k, false);
@@ -101,15 +109,65 @@ public class PathGenerator {
 		}
 	}
 	
+	private void addEdges(){
+		int numEdges = ((width-bufferSpace*2) * height)/20;
+		while(numEdges > 0){
+			boolean edgeRemoved = false;
+			int curX = rand.nextInt(width - bufferSpace*2 - 2) + bufferSpace + 1;
+			int curY = rand.nextInt(height - 2) + 1;
+			int dir = rand.nextInt(Tiles.NUMWALLS);
+			Tiles curTile = board.getTile(curX, curY);
+			if(curTile.isWall(dir)){
+				int newX = curX + dirX[dir];
+				int newY = curY + dirY[dir];
+				board.getTile(curX, curY).setWall(dir, false);
+				board.getTile(newX, newY).setWall((dir + 2) % Tiles.NUMWALLS, false);
+				edgeRemoved = true;
+			}
+			
+			if(edgeRemoved){
+				numEdges--;
+			}
+		}
+	}
+	
+	private void generateSolution(){
+		
+	}
+	
 	public void genMaze(){
 		//need to remove all the walls in the start and end spaces.
 		startAndEnd();		
 		int startX = rand.nextInt(width - bufferSpace*2);
 		int startY = rand.nextInt(height);
 		dfs(startX + bufferSpace, startY);
+		addEdges();
 		addPowerUps();
+		
+		resetSeen();
+		Tiles curTile = board.getTile(width-bufferSpace-1, height-1);
+		curTile.setNextTile(curTile);
+		generateSolution();
 	}
-
+	
+	public void removeHint(){
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				Tiles curTile = board.getTile(i, j);
+				curTile.setHint(false);
+			}
+		}
+	}
+	
+	public void showHint(int playerX, int playerY){
+		removeHint();
+		Tiles curTile = board.getTile(playerX, playerY).getNextTile();
+		for(int i = 0; i < 5; i++){
+			curTile.setHint(true);
+			curTile = curTile.getNextTile();
+		}
+	}
+	
 	public boolean[][] getSeen() {
 		return seen;
 	}

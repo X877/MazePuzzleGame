@@ -21,6 +21,8 @@ public class Tiles {
 	private boolean endPoint;
     private Image tile;
     private int state;
+    private boolean hint;
+    private Tiles nextTile;
 
     /**
      * Constructor for Tiles class
@@ -86,5 +88,21 @@ public class Tiles {
     
     public int getState(){
     	return state;
+    }
+    
+    public void setHint(boolean value){
+    	hint = value;
+    }
+    
+    public boolean getHint(){
+    	return hint;
+    }
+    
+    public Tiles getNextTile(){
+    	return nextTile;
+    }
+    
+    public void setNextTile(Tiles tile){
+    	nextTile = tile;
     }
 }
