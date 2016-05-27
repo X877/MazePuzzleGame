@@ -35,8 +35,6 @@ public class PathGenerator {
 	
 	private void dfs(int curX, int curY){
 		seen[curX][curY] = true;
-		int[] dirX = new int[]{0, 1, 0, -1};
-		int[] dirY = new int[]{1, 0, -1, 0};
 		boolean[] dirSeen = new boolean[Tiles.NUMWALLS];
 		int numDir = 0;
 
@@ -131,8 +129,22 @@ public class PathGenerator {
 		}
 	}
 	
-	private void generateSolution(){
-		
+	private void generateSolution(int curX, int curY){
+		for(int dir = 0; dir < Tiles.NUMWALLS; dir++){
+			Tiles curTile = board.getTile(curX, curY);
+			int newX = curX + dirX[dir];
+			int newY = curY + dirY[dir];
+			if(isInBound(newX, newY)){
+				if(board.getTile(curX, curY).isWall(dir) == false){
+					if(!seen[newX][newY]){
+						seen[newX][newY] = true;
+						Tiles nextTile = board.getTile(newX, newY);
+						nextTile.setNextTile(curTile);
+						generateSolution(newX, newY);
+					}
+				}
+			}
+		}
 	}
 	
 	public void genMaze(){
@@ -145,9 +157,12 @@ public class PathGenerator {
 		addPowerUps();
 		
 		resetSeen();
-		Tiles curTile = board.getTile(width-bufferSpace-1, height-1);
+		startX = width-bufferSpace-1;
+		startY = height-1;
+		seen[startX][startY] = true;
+		Tiles curTile = board.getTile(startX, startY);
 		curTile.setNextTile(curTile);
-		generateSolution();
+		generateSolution(startX, startY);
 	}
 	
 	public void removeHint(){
