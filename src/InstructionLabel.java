@@ -15,7 +15,7 @@ public	class InstructionLabel extends JLabel{
 	 */
 	InstructionLabel(final JFrame frame){
 		this.setText("");
-		img = new ImageIcon(this.getClass().getResource("/images/wallpaper1.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/Images/Menus/Instructions.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addBackToMenuBtn(frame);
 	}

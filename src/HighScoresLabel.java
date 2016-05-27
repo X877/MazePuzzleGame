@@ -31,7 +31,7 @@ public class HighScoresLabel extends JLabel {
 	 */
 	HighScoresLabel(final JFrame frame){
 		this.setText("");
-		img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/Images/Menus/Highscores.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		setHighScore();
 		addBackToMenuBtn(frame);

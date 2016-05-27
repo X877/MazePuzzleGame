@@ -5,10 +5,14 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-
-
+/**
+ * Loads the transition label and refreshes the frame
+ * Loads a different transition background
+ * @author richietrang
+ *
+ */
 public class TransitionLevelLabel extends JLabel {
+	//Variables
 	private JButton nextLevelBtn;
 	private Image img;
 	private String level;
@@ -17,6 +21,13 @@ public class TransitionLevelLabel extends JLabel {
 	private JTextArea txtTotalScore;
 	private JButton btnBackToMenu;
 	
+	/**
+	 * 
+	 * @param difficulty The difficulty of the new level
+	 * @param frame The JFrame that needs to be revalidated
+	 * @param levelScore The score of the level just played
+	 * @param prevScores The score of the previous levels played
+	 */
 	public TransitionLevelLabel(int difficulty, JFrame frame, int levelScore, int prevScores) {
 	    this.level = "";
         if (difficulty == 1) {
@@ -62,13 +73,16 @@ public class TransitionLevelLabel extends JLabel {
 		}
 	}
 	
-    //currTile.setTile(new ImageIcon(this.getClass().getResource("/images/" + level + "/Tiles/Tile_All.png")).getImage());
+    /**
+     * Adds the next Level Button when called
+     * @param frame The Jframe in which the label sits on. 
+     * @param score The score of the level just played
+     */
     public void addNextLevelBtn(final JFrame frame, final int score){
 		nextLevelBtn = new JButton("Next Level");
 		nextLevelBtn.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
 		nextLevelBtn.setBounds(583, 550, 200, 50);
 		add(nextLevelBtn);
-		
 		nextLevelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
@@ -84,6 +98,10 @@ public class TransitionLevelLabel extends JLabel {
 		});
 	}
     
+    /**
+     * gets the high score from the dat file named highscore.dat
+     * @pre Called only if the player finished all 4 levels
+     */
 	public String getHighScore(){
 		//Format: Name:score
 		FileReader readFile = null;
@@ -107,13 +125,17 @@ public class TransitionLevelLabel extends JLabel {
 			}
 		}
 	}   
+	
+	/**
+	 * Adds the back to menu button
+	 * @pre Only called if the player finished all four levels
+	 * @param frame
+	 */
 	public void addBackToMenuBtn(final JFrame frame){
 		btnBackToMenu = new JButton("Main Menu");
 		btnBackToMenu.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
 		btnBackToMenu.setBounds(583, 550, 200, 50);
-		
 		add(btnBackToMenu);
-		
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MenuLabel menu = new MenuLabel(frame);

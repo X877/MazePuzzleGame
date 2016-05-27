@@ -18,7 +18,7 @@ public class CreditsLabel extends JLabel {
 	 */
 	CreditsLabel(final JFrame frame){
 		this.setText("");
-		img = new ImageIcon(this.getClass().getResource("/wallpaper3.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/Images/Menus/credits.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addBackToMenuBtn(frame);
 	}

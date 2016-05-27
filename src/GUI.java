@@ -56,7 +56,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     
 
     public GUI(Board mazeBoard, int tileSize, int playerSize, int posFromBottom, int posFromLeft, int difficulty, JFrame frame, int prevScores){
-
+    	
         this.tileSize = tileSize;
         this.posFromBottom = posFromBottom;
         this.posFromLeft = posFromLeft;
@@ -74,13 +74,12 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         this.frame = frame;
         this.focusRequested = false;
         this.difficulty = difficulty;
-        this.game = new Game(mazeBoard,(double)16/this.tileSize);
+        this.game = new Game(mazeBoard,(double)playerSize/this.tileSize);
 
         keysPressed = new Stack<Character>();
         
         this.subImageRotation = 0;
         this.imageRotation = 0;
-
         if (difficulty == 1) {
             this.level = "Easy";
         } else if (difficulty == 2) {
@@ -260,7 +259,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
                 tickTimer.stop();
                 JButton exit = new JButton();
                 JLabel loseLabel = new JLabel();
-                Image loseImage  = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
+                Image loseImage  = new ImageIcon(this.getClass().getResource("/images/Main.png")).getImage();
                 exit = new JButton("Return To Main Menu");
                 exit.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
                 exit.setBounds(583, 350, 300, 150);
@@ -493,7 +492,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     	JLabel endGame = new JLabel();
         Image img2;
         endGame.setText("");
-		img2 = new ImageIcon(this.getClass().getResource("/images/wallpaper3.png")).getImage();
+		img2 = new ImageIcon(this.getClass().getResource("/Images/Menus/Main.png")).getImage();
 		endGame.setIcon(new ImageIcon(img2));
 		
 		endGame.setVisible(true);

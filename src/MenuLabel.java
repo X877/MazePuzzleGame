@@ -25,7 +25,7 @@ public class MenuLabel extends JLabel {
 		this.setText("");
 		this.setBounds(0, 0, 1376, 768);
 		System.out.println(System.getProperty("user.dir"));
-		img = new ImageIcon(this.getClass().getResource("/images/wallpaper2.png")).getImage();
+		img = new ImageIcon(this.getClass().getResource("/Images/Menus/Main.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addPlayButton(frame);
 		addHighScoresButton(frame);
