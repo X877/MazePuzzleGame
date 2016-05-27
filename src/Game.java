@@ -140,7 +140,6 @@ public class Game {
 		
 		// Changes amount of movement based on powerups
 		if (beerStumbleTime > 0){
-			System.out.println("Stumble time " + beerStumbleTime);
 			dx /= BEER_STUMBLE_SPEEDDOWN;
 			dy /= BEER_STUMBLE_SPEEDDOWN;
 			// Chance of random beer stumbling
