@@ -173,12 +173,12 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     /**
      * Method to draw the player
-     * @param g
+     * @param g Graphics to draw the player on
      */
     public void drawPlayer(Graphics g) {
-
+    	
+    	// Loads all the player sprites
         Graphics2D g2d = (Graphics2D) g;
-
 
         upPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_1.png")).getImage();
         upPlayerImages[1] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Backwards_2.png")).getImage();
@@ -195,12 +195,13 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         stayingPlayerImages[0] = new ImageIcon(this.getClass().getResource("/images/" + level + "/Player/Player_Still.png")).getImage();
 
         Player player = game.getPlayer();
+        
+        //Finds the coordinate to draw the player at
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
         int playerDisplayY = (int)(posFromBottom-player.getY()*tileSize-tileSize+2-playerSize);
-        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
         Image img[] = null;
-        //g2d.fillRect(playerDisplayX, playerDisplayY, playerSize, playerSize);
+        // Decides which image set to display based on player direction
         if (player.getDirection() == Player.UP){
             img  = upPlayerImages;
         }else if (player.getDirection() == Player.DOWN){
@@ -212,7 +213,8 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         }else if (player.getDirection() == Player.NONE){
             img  = stayingPlayerImages;
         }
-
+        
+        //Every certain amount of ticks, change the player sprite to the next one in the set
         subImageRotation++;
 
         if (subImageRotation == GUI.ticksPerImageRotation){
@@ -223,18 +225,19 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         if (img.length == 1){
             imageRotation = 0;
         }
-
+        //Acutually draw the image
         g2d.drawImage(img[imageRotation], playerDisplayX, playerDisplayY, null);
     }
 
     /**
      * Method to draw fog around the player
-     * @param g
+     * @param g Graphics to draw around
      */
     public void drawTransition(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-
+        
+        // Find the centre of the fog to draw upon
         Player player = game.getPlayer();
         int playerSize = (int) (tileSize*game.getPlayerSize()+1);
         int playerDisplayX =(int)(posFromLeft+player.getX()*tileSize)+1;
@@ -365,13 +368,17 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
     }
 
     @Override
+    /**
+     * Adds key pressed to key pressed list
+     */
     public void keyPressed(KeyEvent e) {
     	if (!keysPressed.contains(e.getKeyChar())){
-    		//System.out.println(ADDING" + keysPressed);
     		keysPressed.add(e.getKeyChar());
     	}
     }
-
+    /**
+     * Removes key released from key pressed list
+     */
     @Override
     public void keyReleased(KeyEvent e) {
     	keysPressed.remove((Object) e.getKeyChar());
@@ -379,10 +386,17 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
 
     @Override
     public void keyTyped(KeyEvent arg0) {
-        // TODO Auto-generated method stub
     }
     
+    /**
+     * Draw fog of diameter around the coordinates
+     * @param xCentre 	X the fog centers around
+     * @param yCentre 	Y the fog centers around
+     * @param diameter 	Diameter of the fog in px
+     * @param g2d		Graphics to draw the fog
+     */
     private void drawFog(int xCentre, int yCentre, int diameter, Graphics2D g2d){
+    	// Creates a square around the playing field and subtracts the specified circle from that square
     	g2d.setColor(Color.BLACK);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
         	      RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);

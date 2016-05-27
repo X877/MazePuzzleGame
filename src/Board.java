@@ -81,4 +81,21 @@ public class Board {
         this.columns = columns;
     }
 
+	public void removeHint(){
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				Tiles curTile = getTile(i, j);
+				curTile.setHint(false);
+			}
+		}
+	}
+	
+	public void showHint(int playerX, int playerY){
+		removeHint();
+		Tiles curTile = getTile(playerX, playerY).getNextTile();
+		for(int i = 0; i < 5; i++){
+			curTile.setHint(true);
+			curTile = curTile.getNextTile();
+		}
+	}
 }
