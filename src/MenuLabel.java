@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-//import java.awt.event.KeyAdapter;
-//Add enter button to play later
-
+/**
+ * MenuLabel is the main label screen which contains all the initial buttons and their action listeners
+ * It calls the level generator and GUI in order for play to work.
+ */
 public class MenuLabel extends JLabel {
 	//Variables
 	private Image img;
@@ -64,7 +65,8 @@ public class MenuLabel extends JLabel {
 					//Create a new board
 					LevelGenerator gennie = new LevelGenerator(1);
 					GUI easy = gennie.levelGen(frame, 0);
-
+					
+					//Add the GUI to the board
 					frame.getContentPane().add(easy);
 					frame.setTitle("Don't be a HOBO - Stage 1");
 					frame.setSize(1366, 768);
@@ -74,11 +76,10 @@ public class MenuLabel extends JLabel {
 					frame.revalidate();
 				}
 			}
-
+            //Must be included in order for the enter/space button to start the game
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
-
 			public void keyReleased(KeyEvent e) {
 			}
 		});

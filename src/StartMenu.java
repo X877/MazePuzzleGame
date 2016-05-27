@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * Used to initialise the program and the JFrame
+ */
 public class StartMenu {
 	//Variables
 	private JFrame frame;
@@ -32,7 +34,6 @@ public class StartMenu {
 		this.frame = new JFrame();
 		this.frame.setBounds(100, 100, 1366, 768);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		this.menu =  new MenuLabel(frame);
 		this.menu.setBounds(0, 0, 1366, 768);
 		this.menu.setVisible(true);
