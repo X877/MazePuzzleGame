@@ -85,7 +85,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
         } else if (difficulty == 4) {
             this.level = "Hopes&Dreams";
         }
-        this.img = new ImageIcon(this.getClass().getResource("/images/" + level + "/Background.png")).getImage();
+        this.img = new ImageIcon(this.getClass().getResource("/images/" + level + "/background.png")).getImage();
 
         this.count = "";
     }
@@ -239,7 +239,7 @@ public class GUI extends JPanel implements KeyListener, ActionListener{
             }
             System.out.println(this.endTime + " " + Math.abs(game.getTime()));
             //Game waits 450ms for the fog to cover the screen before going to the lose screen
-            if(Math.abs(game.getTime())- this.endTime >= 450){
+            if(Math.abs(game.getTime())- this.endTime >= 650){
             	g.clearRect(0, 0, 9999, 9999);
                 actionTimer.stop();
                 JButton exit = new JButton();
