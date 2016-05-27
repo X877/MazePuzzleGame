@@ -23,7 +23,8 @@ public class MenuLabel extends JLabel {
 	MenuLabel(final JFrame frame){
 		this.setText("");
 		this.setBounds(0, 0, 1376, 768);
-		img = new ImageIcon(this.getClass().getResource("/images/Menus/Main.png")).getImage();
+		System.out.println(System.getProperty("user.dir"));
+		img = new ImageIcon(this.getClass().getResource("/images/wallpaper2.png")).getImage();
 		this.setIcon(new ImageIcon(img));
 		addPlayButton(frame);
 		addHighScoresButton(frame);
@@ -42,13 +43,15 @@ public class MenuLabel extends JLabel {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
 				//Create a new board
-				LevelGenerator gennie = new LevelGenerator(2);
-				GUI easy = gennie.levelGen(frame);
+				LevelGenerator gennie = new LevelGenerator(1);
+				GUI easy = gennie.levelGen(frame, 0);
 
 				frame.getContentPane().add(easy);
 				frame.setTitle("Don't be a HOBO - Stage 1");
 				frame.setLocationRelativeTo(null);
 				frame.revalidate();
+
+				
 			}
 		});
       
@@ -64,7 +67,7 @@ public class MenuLabel extends JLabel {
 					//Create a new board
 
 					LevelGenerator gennie = new LevelGenerator(1);
-					GUI easy = gennie.levelGen(frame);
+					GUI easy = gennie.levelGen(frame, 0);
 
 					frame.getContentPane().add(easy);
 					frame.setTitle("Don't be a HOBO - Stage 1");
