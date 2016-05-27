@@ -92,7 +92,7 @@ public class PathGenerator {
 				
 				curTile = board.getTile((width-1)-i, j);
 				for(int k = 0; k < 4; k++){
-					if(i == bufferSpace-1 && k == Tiles.WEST && j != height-1){
+					if(i == (width-bufferSpace) && k == Tiles.WEST && j != height-1){
 						continue;
 					}
 					curTile.setWall(k, false);
