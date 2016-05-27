@@ -42,7 +42,7 @@ public class MenuLabel extends JLabel {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
 				//Create a new board
-				LevelGenerator gennie = new LevelGenerator(1);
+				LevelGenerator gennie = new LevelGenerator(2);
 				GUI easy = gennie.levelGen(frame);
 
 				frame.getContentPane().add(easy);
