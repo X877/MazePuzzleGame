@@ -3,30 +3,26 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+/**
+ * Stores the game high score
+ * The score is the sum of all leftover time from each level
+ * Current implementation only stores one score
+ */
 public class HighScoresLabel extends JLabel {
     JButton btnBackToMenu;
     Image img;
     String highScore;
-    //String score2;
-    //String score3;
     JTextArea txtHighScore1;
-    //JTextArea txtHighScore2;
-    //JTextArea txtHighScore3;
 	int currentScore;
-
     
 	/**
 	 * Constructor Initialises the image of the instruction label and adds the button to go back to menu
@@ -40,10 +36,9 @@ public class HighScoresLabel extends JLabel {
 		setHighScore();
 		addBackToMenuBtn(frame);
 		frame.revalidate();
-		highScore = getHighScore();
-		
-		
+		highScore = getHighScore();		
 	}
+	
 	/**
 	 * Adds a button so you can return back to the main menu after reading instructions
 	 * @param frame is the JFrame window. It needs to be altered and cleared
@@ -67,40 +62,32 @@ public class HighScoresLabel extends JLabel {
 		});
 	}
 	
+	/**
+	 * Sets the highScore text
+	 * @param txtHighScore1 The JTextArea that stores the score
+	 * @post txtHighScore1 must be in the form name:score
+	 */
 	public void setHighScore(){
 		txtHighScore1 = new JTextArea();
 		txtHighScore1.setText(getHighScore());
 		txtHighScore1.setBounds(583, 200, 200, 40);
 		txtHighScore1.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-		this.add(txtHighScore1);
-        /*
-		txtHighScore2 = new JTextArea();
-		txtHighScore2.setText("Daaron 120.08s");
-		txtHighScore2.setBounds(583, 300, 200, 40);
-		txtHighScore2.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-		
-		txtHighScore3 = new JTextArea();
-		txtHighScore3.setText("Lachlan 200.05s");
-		txtHighScore3.setBounds(583, 400, 200, 40);
-		txtHighScore3.setFont(new Font("Copperplate Gothic Light", Font.BOLD, 20));
-
-		this.add(txtHighScore2);
-		this.add(txtHighScore3);
-		
-		*/
-		
-		
-		
+		this.add(txtHighScore1);		
 	}
     
-	
+	/**
+	 * Gets the high score from the dat file if there
+	 * Uses a dat rather than txt file to help reduce cheating
+	 * @pre If there is no dat file (no score set) 
+	 *      then it displays nobody:0
+	 */
 	public String getHighScore(){
 		//Format: Name:score
 		FileReader readFile = null;
 		BufferedReader reader = null;
 		try{
 		    readFile = new FileReader("highscore.dat");
-		     reader = new BufferedReader(readFile);
+		    reader = new BufferedReader(readFile);
 		    //Returns the score as a string
 		    return reader.readLine();
 		} catch (Exception e){
@@ -116,29 +103,5 @@ public class HighScoresLabel extends JLabel {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	
-	/**
-	 * Alters the high scores if a time is faster
-	 * @param time The sum of the time after passing all three levels
-	 */
-	
-	
-	
-	/*
-	public void changeHighScore(String newScore){
-		
-		//The fastest time should be stored as time1
-		if (time < score1){
-			score1 = time;
-		//A time faster than score 2 but slower than score 3 should be the new score2
-		} else if( time < score2 && time > score3){
-			score2 = time;
-		//If the time is faster than score 3 it becomes new score 3
-		} else if (time < score3){
-			score3 = time;
-		}
-	}
-	*/
+	}	
 }
