@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class PathGenerator {
@@ -129,18 +131,36 @@ public class PathGenerator {
 		}
 	}
 	
-	private void generateSolution(int curX, int curY){
-		for(int dir = 0; dir < Tiles.NUMWALLS; dir++){
+	private void generateSolution(){
+		resetSeen();
+		int startX = width-bufferSpace-1;
+		int startY = height-1;
+		seen[startX][startY] = true;
+		Tiles startTile = board.getTile(startX, startY);
+		startTile.setNextTile(startTile);
+		Coordinates curPos = new Coordinates(startX, startY);
+		
+		Queue<Coordinates> bfs = new LinkedList<Coordinates>();
+		bfs.add(curPos);
+		
+		while(!bfs.isEmpty()){
+			curPos = bfs.remove();
+			int curX = curPos.getX();
+			int curY = curPos.getY();
 			Tiles curTile = board.getTile(curX, curY);
-			int newX = curX + dirX[dir];
-			int newY = curY + dirY[dir];
-			if(isInBound(newX, newY)){
-				if(board.getTile(curX, curY).isWall(dir) == false){
-					if(!seen[newX][newY]){
-						seen[newX][newY] = true;
-						Tiles nextTile = board.getTile(newX, newY);
-						nextTile.setNextTile(curTile);
-						generateSolution(newX, newY);
+			
+			for(int dir = 0; dir < Tiles.NUMWALLS; dir++){
+				int newX = curX + dirX[dir];
+				int newY = curY + dirY[dir];
+				if(isInBound(newX, newY)){
+					if(board.getTile(curX, curY).isWall(dir) == false){
+						if(!seen[newX][newY]){
+							seen[newX][newY] = true;
+							Tiles nextTile = board.getTile(newX, newY);
+							nextTile.setNextTile(curTile);
+							Coordinates nextPos = new Coordinates(newX, newY);
+							bfs.add(nextPos);
+						}
 					}
 				}
 			}
@@ -155,14 +175,7 @@ public class PathGenerator {
 		dfs(startX + bufferSpace, startY);
 		addEdges();
 		addPowerUps();
-		
-		resetSeen();
-		startX = width-bufferSpace-1;
-		startY = height-1;
-		seen[startX][startY] = true;
-		Tiles curTile = board.getTile(startX, startY);
-		curTile.setNextTile(curTile);
-		generateSolution(startX, startY);
+		generateSolution();
 	}
 	
 	public void removeHint(){
